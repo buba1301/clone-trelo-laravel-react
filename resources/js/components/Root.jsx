@@ -9,7 +9,9 @@ const Root = () => (
     <Router>
         <Switch>
             <Route component={MainLayout}>
-                <Route path="/" component={RegistrationsNew} />
+                <Route path="/sing_up" component={RegistrationsNew} />
+
+                <Route path="/" component={MainLayout}></Route>
             </Route>
         </Switch>
     </Router>
