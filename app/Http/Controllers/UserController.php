@@ -18,7 +18,7 @@ class UserController extends Controller
           'first_name' => 'required|string|max:255',
           'last_name' => 'required|string|max:255',
           'email' => 'required|string|unique:App\User,email|max:255',
-          'password' => 'required|string|min:6'
+          'password' => 'required|string|min:6|confirmed'
       ]);
 
         if ($validator->fails()) {
