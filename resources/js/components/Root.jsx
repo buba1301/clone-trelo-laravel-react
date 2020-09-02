@@ -1,17 +1,24 @@
 import React from 'react';
 import {
-  BrowserRouter as Router, Route, Switch, IndexRoute,
+  BrowserRouter as Router,
+  Route,
+  Switch,
 } from 'react-router-dom';
-import MainLayout from './MainLayout.jsx';
+import AuthenticatedContainer from './AuthenticatedContainer.jsx';
 import RegistrationsNew from './RegistrationNew.jsx';
+import SessionNew from './SessionNew.jsx';
 
 const Root = () => (
     <Router>
         <Switch>
-            <Route component={MainLayout}>
-                <Route path="/sing_up" component={RegistrationsNew} />
-
-                <Route path="/" component={MainLayout}></Route>
+            <Route path="/sign_up">
+                <RegistrationsNew />
+            </Route>
+            <Route path="/sign_in">
+                <SessionNew />
+            </Route>
+            <Route exact path="/">
+                <AuthenticatedContainer />
             </Route>
         </Switch>
     </Router>
