@@ -3,39 +3,36 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useFormik } from 'formik';
 import _ from 'lodash';
 import {
-  Form, FormGroup, FormControl, Button,
+  Form, FormGroup, FormControl, FormLabel, Button,
 } from 'react-bootstrap';
 import { Link, useHistory } from 'react-router-dom';
-import { getErrors } from '../utils';
+import { getErrors, setDocumentTitle } from '../utils';
 import { asyncActions, actions } from '../slices/index';
+
+// add Allert "all OK"
 
 const RegistrationsNew = () => {
   const errors = useSelector((state) => state.registration.errors);
-  console.log(errors);
 
   const dispatch = useDispatch();
   const history = useHistory();
 
   useEffect(() => {
-    // setDocumentTitle('SingUp');
+    setDocumentTitle('SignUp');
   });
 
-  const handleSubmit = async (values, { resetForm, setStatus }) => {
+  const handleSubmit = async (values, { resetForm }) => {
     const { singUp } = asyncActions;
     const { registrationErrors } = actions;
 
     try {
       await dispatch(singUp(values));
+      resetForm();
+      history.push('/');
     } catch (e) {
-      console.log(e.response.data);
-
       const { data } = e.response;
 
-      const a = JSON.parse(data);
-
-      dispatch(registrationErrors(a)); // !!! додоелать вывод ошибок
-
-      setStatus(getErrors(errors, 'email'));
+      dispatch(registrationErrors(JSON.parse(data)));
     }
   };
 
@@ -58,78 +55,90 @@ const RegistrationsNew = () => {
               </header>
               <Form onSubmit={f.handleSubmit}>
                   <FormGroup>
+                      <FormLabel>First Name</FormLabel>
                       <FormControl
                           name="first_name"
                           type="text"
                           placeholder="First Name"
                           onChange={f.handleChange}
                           value={f.values.first_name}
-                          isInvalid={!!f.status}
+                          isInvalid={!!errors.first_name}
+                          required
                           // disable={f.isSubmitting}
                       />
                       <FormControl.Feedback type="invalid">
-                          {f.status}
+                          {_.has(errors, 'first_name') && getErrors(errors, 'first_name')}
                       </FormControl.Feedback>
                   </FormGroup>
 
                   <FormGroup>
+                      <FormLabel>Last Name</FormLabel>
                       <FormControl
                           name="last_name"
                           type="text"
                           placeholder="Last Name"
                           onChange={f.handleChange}
                           value={f.values.last_name}
-                          isInvalid={!!f.status}
+                          isInvalid={!!errors.last_name}
+                          required
                           // disable={f.isSubmitting}
                       />
                       <FormControl.Feedback type="invalid">
-                          {f.status}
+                          {_.has(errors, 'last_name') && getErrors(errors, 'last_name')}
                       </FormControl.Feedback>
                   </FormGroup>
 
                   <FormGroup>
+                      <FormLabel>Email</FormLabel>
                       <FormControl
                           name="email"
                           type="text"
                           placeholder="Email"
                           onChange={f.handleChange}
                           value={f.values.email}
-                          isInvalid={!!f.status}
+                          isInvalid={!!errors.email}
+                          required
                           // disable={f.isSubmitting}
                       />
-                      <FormControl.Feedback type="invalid">
-                          {f.status}
-                      </FormControl.Feedback>
+
+                      <Form.Control.Feedback type="invalid">
+                          {_.has(errors, 'email') && getErrors(errors, 'email')}
+                      </Form.Control.Feedback>
                   </FormGroup>
 
                   <FormGroup>
+                      <FormLabel>Password</FormLabel>
                       <FormControl
                           name="password"
                           type="text"
                           placeholder="Password"
                           onChange={f.handleChange}
                           value={f.values.password}
-                          isInvalid={!!f.status}
+                          isInvalid={!!errors.password}
+                          required
                           // disable={f.isSubmitting}
                       />
-                      <FormControl.Feedback type="invalid"></FormControl.Feedback>
+                      <Form.Control.Feedback type="invalid">
+                          {_.has(errors, 'password') && getErrors(errors, 'password')}
+                      </Form.Control.Feedback>
                   </FormGroup>
 
                   <FormGroup>
+                      <FormLabel>Confirm password</FormLabel>
                       <FormControl
                           name="password_confirmation"
                           type="text"
                           placeholder="Confirm password"
                           onChange={f.handleChange}
                           value={f.values.password_confirmation}
-                          isInvalid={!!f.status}
+                          isInvalid={!!errors.password}
+                          required
                           //  disable={f.isSubmitting}
                       />
-                      <FormControl.Feedback type="invalid"></FormControl.Feedback>
                   </FormGroup>
 
                   <Button variant="primary" type="submit">
-                      Sing Up
+                      Sign Up
                   </Button>
               </Form>
               <Link to="/sign_in">Sign in</Link>
