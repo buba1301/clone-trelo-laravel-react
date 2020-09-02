@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 import routes from '../routes';
+import { sessionActions } from './session';
 
 const slice = createSlice({
   name: 'registration',
@@ -23,6 +24,8 @@ const singUp = (registrationFormData) => async (dispatch) => {
   const { token, user } = res.data;
 
   localStorage.setItem('laravelToken', token);
+
+  dispatch(sessionActions.addCurrentUser(user));
 };
 
 export { registration, registrationActions, singUp };
