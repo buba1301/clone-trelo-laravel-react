@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Nav, Button } from 'react-bootstrap';
 import ReactGravatar from 'react-gravatar';
 import { asyncActions } from '../slices/index';
@@ -43,6 +44,12 @@ const Header = ({ user, dispatch, history }) => { // eslint ругается у�
           </Nav>
       </header>
   );
+};
+
+Header.proptypes = {
+  user: PropTypes.object,
+  dispatch: PropTypes.func,
+  histoty: PropTypes.func,
 };
 
 export default Header;
