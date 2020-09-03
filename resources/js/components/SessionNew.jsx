@@ -80,7 +80,7 @@ const SessionNew = () => {
                   </FormGroup>
 
                   <Button variant="primary" type="submit">
-                      Sign In
+                      Sign In  // add spinet slow loading
                   </Button>
               </Form>
               <Link to="/sign_up">Sign up</Link>

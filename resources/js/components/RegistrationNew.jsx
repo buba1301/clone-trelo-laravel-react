@@ -138,7 +138,7 @@ const RegistrationsNew = () => {
                   </FormGroup>
 
                   <Button variant="primary" type="submit">
-                      Sign Up
+                      Sign Up // add spinet slow loading
                   </Button>
               </Form>
               <Link to="/sign_in">Sign in</Link>

@@ -3,7 +3,7 @@ import axios from 'axios';
 import routes from '../routes';
 // import routes from '../routes';
 
-const slice = createSlice({
+const slice = createSlice({ // add fetchin state
   name: 'session',
   initialState: {
     currentUser: {},
@@ -37,14 +37,13 @@ const getCurrentUser = (authToken) => async (dispatch) => {
 
   const res = await axios.get(url, {
     headers: {
-      authorization: authToken,
+      Authorization: `Bearer ${authToken}`,
     },
   });
 
   const { user } = res.data;
 
   dispatch(sessionActions.addCurrentUser(user));
-  console.log(res);
 };
 
 export {
