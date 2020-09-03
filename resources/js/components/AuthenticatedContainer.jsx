@@ -25,7 +25,7 @@ const AuthenticatedContainer = () => {
       try {
         fetchUser();
       } catch (e) {
-        console.log(e.response);
+        console.log(e.response); /// add show error
       }
     } else if (!authToken) {
       history.push('/sign_up');
@@ -34,7 +34,11 @@ const AuthenticatedContainer = () => {
 
   return (
       <div className="application-container">
-          <Header />
+          <Header
+            user={currentUser}
+            dispatch={dispatch}
+            history={history}
+          />
 
           <div className="main-container">
               <Main />
