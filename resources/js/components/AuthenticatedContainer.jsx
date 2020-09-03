@@ -1,15 +1,10 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { useFormik } from 'formik';
 import _ from 'lodash';
-import {
-  Form, FormGroup, FormControl, FormLabel, Button,
-} from 'react-bootstrap';
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import Header from './Header.jsx';
 import Main from './Main.jsx';
-import { getErrors, setDocumentTitle } from '../utils';
-import { asyncActions, actions } from '../slices/index';
+import { asyncActions } from '../slices/index';
 
 const AuthenticatedContainer = () => {
   const currentUser = useSelector((state) => state.session.currentUser);
@@ -18,19 +13,24 @@ const AuthenticatedContainer = () => {
   const history = useHistory();
 
   const authToken = localStorage.getItem('laravelToken');
-  console.log(!currentUser);
 
-  const getUser = async () => {
-    await dispatch(asyncActions.getCurrentUser(authToken));
-  };
+  // localStorage.removeItem('laravelToken');
 
   useEffect(() => {
-    if (authToken && !currentUser) {
-      getUser();
+    const fetchUser = async () => {
+      await dispatch(asyncActions.getCurrentUser(authToken));
+    };
+
+    if (authToken && !currentUser.id) {
+      try {
+        fetchUser();
+      } catch (e) {
+        console.log(e.response);
+      }
     } else if (!authToken) {
       history.push('/sign_up');
     }
-  });
+  }, [currentUser.id]);
 
   return (
       <div className="application-container">
