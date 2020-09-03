@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 import { registration, registrationActions, singUp } from './registration';
 import {
-  session, sessionActions, signIn, getCurrentUser,
+  session, sessionActions, signIn, getCurrentUser, signOut,
 } from './session';
 
 const actions = {
@@ -13,6 +13,7 @@ const asyncActions = {
   singUp,
   signIn,
   getCurrentUser,
+  signOut,
 };
 
 export {

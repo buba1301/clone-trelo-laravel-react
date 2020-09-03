@@ -13,6 +13,7 @@ const slice = createSlice({ // add fetchin state
   },
   reducers: {
     addCurrentUser: (state, { payload }) => ({ ...state, currentUser: payload }),
+    userSignOut: (state, { payload }) => ({ ...state, currentUser: {} }),
     loginErrors: (state, { payload }) => ({ ...state, errors: payload }),
   },
 });
@@ -46,6 +47,14 @@ const getCurrentUser = (authToken) => async (dispatch) => {
   dispatch(sessionActions.addCurrentUser(user));
 };
 
+const signOut = () => async (dispatch) => {
+  const url = routes.userDeleteSessionPath();
+
+  localStorage.removeItem('laravelToken');
+
+  dispatch(sessionActions.userSignOut());
+};
+
 export {
-  session, sessionActions, signIn, getCurrentUser,
+  session, sessionActions, signIn, getCurrentUser, signOut,
 };
