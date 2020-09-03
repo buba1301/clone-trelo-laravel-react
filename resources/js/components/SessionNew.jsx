@@ -3,7 +3,14 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useFormik } from 'formik';
 import _ from 'lodash';
 import {
-  Form, FormGroup, FormControl, FormLabel, Button,
+  Container,
+  Row,
+  Col,
+  Form,
+  FormGroup,
+  FormControl,
+  FormLabel,
+  Button,
 } from 'react-bootstrap';
 import { Link, useHistory } from 'react-router-dom';
 import { setDocumentTitle } from '../utils';
@@ -43,49 +50,52 @@ const SessionNew = () => {
   });
 
   return (
-      <div className="view-container registration new">
-          <main>
-              <header>
-                  <div className="logo" />
-              </header>
-              <Form onSubmit={f.handleSubmit}>
-                  <FormGroup>
-                      <FormLabel>Email</FormLabel>
-                      <FormControl
-                          name="email"
-                          type="text"
-                          placeholder="Email"
-                          onChange={f.handleChange}
-                          value={f.values.email}
-                          required
-                      // disable={f.isSubmitting}
-                      />
-                  </FormGroup>
-
-                  <FormGroup>
-                      <FormLabel>Password</FormLabel>
-                      <FormControl
-                          name="password"
-                          type="text"
-                          placeholder="Password"
-                          onChange={f.handleChange}
-                          value={f.values.password}
-                          isInvalid={!!errors.userNotFound}
-                          required
-                      // disable={f.isSubmitting}
-                      />
-                      <Form.Control.Feedback type="invalid">
-                          {_.has(errors, 'userNotFound') && errors.userNotFound}
-                      </Form.Control.Feedback>
-                  </FormGroup>
-
-                  <Button variant="primary" type="submit">
-                      Sign In  // add spinet slow loading
-                  </Button>
-              </Form>
-              <Link to="/sign_up">Sign up</Link>
-          </main>
-      </div>
+      <Container>
+          <Row className="justify-content-md-center">
+              <Col md="auto">
+                  <header>
+                      <div className="logo" />
+                  </header>
+                  <Form onSubmit={f.handleSubmit}>
+                      <FormGroup>
+                          <FormLabel>Email</FormLabel>
+                          <FormControl
+                              name="email"
+                              type="text"
+                              placeholder="Email"
+                              onChange={f.handleChange}
+                              value={f.values.email}
+                              required
+                              // disable={f.isSubmitting}
+                          />
+                      </FormGroup>
+                      <FormGroup>
+                          <FormLabel>Password</FormLabel>
+                          <FormControl
+                              name="password"
+                              type="text"
+                              placeholder="Password"
+                              onChange={f.handleChange}
+                              value={f.values.password}
+                              isInvalid={!!errors.userNotFound}
+                              required
+                              // disable={f.isSubmitting}
+                          />
+                          <Form.Control.Feedback type="invalid">
+                              {_.has(errors, 'userNotFound')
+                                  && errors.userNotFound}
+                          </Form.Control.Feedback>
+                      </FormGroup>
+                      <Button variant="primary" type="submit" size="lg" block>
+                          Sign In
+                      </Button>{' '}
+                      <Button variant="link" size="lg" block>
+                          <Link to="/sign_up">Sign up</Link>
+                      </Button>
+                  </Form>
+              </Col>
+          </Row>
+      </Container>
   );
 };
 
