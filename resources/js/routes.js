@@ -6,4 +6,5 @@ export default {
   loginPath: () => [host, prefix, 'login'].join('/'),
   userPath: () => [host, prefix, 'user'].join('/'),
   userDeleteSessionPath: () => [host, prefix, 'user'].join('/'),
+  boardsPath: () => [host, prefix, 'boards'].join('/'),
 };
