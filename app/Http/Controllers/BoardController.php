@@ -115,8 +115,12 @@ class BoardController extends Controller
      * @param  \App\Board  $board
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Board $board)
+    public function destroy($id)
     {
-        //
+        $board = Board::find($id);
+
+        $board->delete();
+
+        return response('Ok', 200);
     }
 }
