@@ -35,7 +35,6 @@ const signIn = (loginFormData) => async (dispatch) => {
 
 const getCurrentUser = (authToken) => async (dispatch) => {
   const url = routes.userPath();
-
   const res = await axios.get(url, {
     headers: {
       Authorization: `Bearer ${authToken}`,
@@ -48,7 +47,7 @@ const getCurrentUser = (authToken) => async (dispatch) => {
 };
 
 const signOut = () => async (dispatch) => {
-  const url = routes.userDeleteSessionPath();
+  const url = routes.userDeleteSessionPath(); // добавить запрос чтобы удалить из базы
 
   localStorage.removeItem('laravelToken');
 

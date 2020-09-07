@@ -3,7 +3,7 @@ import axios from 'axios';
 import routes from '../routes';
 import { sessionActions } from './session';
 
-const slice = createSlice({ // add fetchin state
+const slice = createSlice({ // add fetching state
   name: 'registration',
   initialState: {
     errors: {},
