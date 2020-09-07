@@ -15,6 +15,10 @@ const slice = createSlice({
     addBoard: (state, { payload }) => ({ ...state, boards: [...state.boards, payload] }),
     setShowForm: (state, { payload }) => ({ ...state, showForm: payload }),
     boardsErrors: (state, { payload }) => ({ ...state, errors: payload }),
+    deleteBoard: (state, { payload: { currentBoardId } }) => {
+      const filterBoards = state.boards.filter(({ id }) => id !== currentBoardId);
+      return { ...state, boards: filterBoards };
+    },
   },
 });
 
@@ -47,6 +51,19 @@ const createBoard = (data, authToken) => async (dispatch) => {
   dispatch(boardsActions.addBoard(board));
 };
 
+const fetchDeleteBoard = (currentBoardId, authToken) => async (dispatch) => {
+  const url = routes.boardsPathDelete(currentBoardId);
+  await axios.delete(url, {
+    headers: {
+      Authorization: `Bearer ${authToken}`,
+    },
+  });
+
+  dispatch(boardsActions.deleteBoard({
+    currentBoardId,
+  }));
+};
+
 export {
-  boardsActions, boards, boardsFetching, createBoard,
+  boardsActions, boards, boardsFetching, createBoard, fetchDeleteBoard,
 };

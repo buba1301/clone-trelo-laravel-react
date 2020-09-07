@@ -4,7 +4,7 @@ import {
   session, sessionActions, signIn, getCurrentUser, signOut,
 } from './session';
 import {
-  boards, boardsActions, boardsFetching, createBoard,
+  boards, boardsActions, boardsFetching, createBoard, fetchDeleteBoard,
 } from './boards';
 
 const actions = {
@@ -20,6 +20,7 @@ const asyncActions = {
   signOut,
   boardsFetching,
   createBoard,
+  fetchDeleteBoard,
 };
 
 export {
