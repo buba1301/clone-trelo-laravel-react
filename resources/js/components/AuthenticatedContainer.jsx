@@ -2,38 +2,47 @@ import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import _ from 'lodash';
 import { useHistory } from 'react-router-dom';
+import { Alert } from 'react-bootstrap';
 import Header from './Header.jsx';
 import Main from './Main.jsx';
-import { asyncActions } from '../slices/index';
+import { actions, asyncActions } from '../slices/index';
 
 const AuthenticatedContainer = () => {
   const currentUser = useSelector((state) => state.session.currentUser);
+  const errors = useSelector((state) => state.session.errors);
   console.log(currentUser);
   const dispatch = useDispatch();
   const history = useHistory();
-
-  const authToken = localStorage.getItem('laravelToken');
-
-  // localStorage.removeItem('laravelToken');
+  // localStorage.setItem('laravelToken', 'fghrjreej');
+  const authToken = localStorage.getItem('laravelToken'); // может быть использовать Context
 
   useEffect(() => {
-    const fetchUser = async () => {
-      await dispatch(asyncActions.getCurrentUser(authToken));
-    };
-
     if (authToken && !currentUser.id) {
-      try {
-        fetchUser();
-      } catch (e) {
-        console.log(e.response); /// add show error
-      }
+      const fetchUser = async () => {
+        try {
+          await dispatch(asyncActions.getCurrentUser(authToken));
+        } catch (e) {
+          const { data } = e.response;
+          console.log(data);
+          dispatch(actions.loginErrors(data));
+        }
+      };
+      fetchUser();
     } else if (!authToken) {
       history.push('/sign_up');
     }
   }, [currentUser.id]);
 
+  if (errors.status) {
+    return (
+        <Alert variant="danger">
+            {errors.status}. Try again <Alert.Link href="/sign_in">SignIn</Alert.Link>
+        </Alert>
+    );
+  }
+
   return (
-      <div className="application-container">
+        <div className="application-container">
           <Header
             user={currentUser}
             dispatch={dispatch}
@@ -41,9 +50,9 @@ const AuthenticatedContainer = () => {
           />
 
           <div className="main-container">
-              <Main />
+            <Main token={authToken} userId={currentUser.id}/>
           </div>
-      </div>
+        </div>
   );
 };
 
