@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\BoardCreated;
 use App\Board;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -81,9 +82,11 @@ class BoardController extends Controller
      * @param  \App\Board  $board
      * @return \Illuminate\Http\Response
      */
-    public function show(Board $board)
+    public function show($id)
     {
-        //
+        $board = Board::find($id);
+
+        return response()->json(compact('board'), 201);
     }
 
     /**
@@ -122,5 +125,20 @@ class BoardController extends Controller
         $board->delete();
 
         return response('Ok', 200);
+    }
+
+    /*
+      метод join будет выбирать доску по id и оставлять канал открытым для изменений
+     */
+
+    public function board(Request $request)
+    {
+        // Добавление юсера на доску
+        /*
+          Должен приходить новый пользователь, который добавляется в базу, с привязкой к этой доске и событие отсылается всем кто слушает этот канал (broadcast)
+        */
+        $id = $request->get('board_id');
+        $board = Board::find($id);
+        event(new BoardCreated($board));
     }
 }
