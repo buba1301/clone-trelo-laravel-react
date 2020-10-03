@@ -1,8 +1,9 @@
-import React from 'react';
+/* eslint-disable react/prop-types */
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useFormik } from 'formik';
 import { useSelector } from 'react-redux';
-// import { useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import {
   Modal, Form, FormGroup, FormControl, Button,
 } from 'react-bootstrap';
@@ -13,14 +14,20 @@ const BoardsForm = ({
 }) => {
   const showForm = useSelector((state) => state.boards.showForm);
 
-  const handleSubmit = async (values) => {
+  const currentBoardId = useSelector((state) => state.boards.currentBoardId);
+
+  const history = useHistory();
+  console.log(showForm);
+  console.log(currentBoardId);
+  const handleSubmit = (values) => {
     try {
-      dispatch(asyncActions.createBoard(values, token));
+      dispatch(asyncActions.createBoard(values, token, history));
       dispatch(actions.setShowForm(!showForm));
     } catch (e) {
       console.log(e.response);
       // dispatch(actions.setErrors(e.response));
     }
+    // history.push(`/boards/${currentBoardId}`);
     // resetForm();
   };
 
@@ -48,7 +55,10 @@ const BoardsForm = ({
                           required
                       />
                   </FormGroup>
-                  <Button variant="primary" type="submit">
+                  <Button
+                      variant="primary"
+                      type="submit"
+                  >
                       Add board
                   </Button>
               </Form>
