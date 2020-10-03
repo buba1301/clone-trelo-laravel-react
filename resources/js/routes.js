@@ -7,4 +7,6 @@ export default {
   userPath: () => [host, prefix, 'user'].join('/'),
   userDeleteSessionPath: () => [host, prefix, 'user'].join('/'),
   boardsPath: () => [host, prefix, 'boards'].join('/'),
+  boardPathShow: (id) => [host, prefix, 'boards', id].join('/'),
+  boardsPathDelete: (id) => [host, prefix, 'boards', id].join('/'),
 };
