@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Broadcast;
+use App\Board;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,10 +14,9 @@ use Illuminate\Support\Facades\Broadcast;
 |
 */
 
-Broadcast::channel('App.User.{id}', function ($user, $id) {
+/* Broadcast::channel('App.User.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
-});
-
-Broadcast::channel('user.{boardId}', function ($user, $boardId) {
-  return $user->id === $boardId;
-});
+});*/
+// ['middleware' => ['web', 'auth']
+// Broadcast::routes(['middleware' => ['auth.api']]);
+Broadcast::channel('board.{board_id}', \App\Broadcasting\BoardChannel::class);
