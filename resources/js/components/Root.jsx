@@ -7,6 +7,8 @@ import {
 import AuthenticatedContainer from './AuthenticatedContainer.jsx';
 import RegistrationsNew from './RegistrationNew.jsx';
 import SessionNew from './SessionNew.jsx';
+import BoardShowView from './BoardShowView.jsx';
+import Main from './Main.jsx';
 
 const Root = () => (
     <Router>
@@ -17,8 +19,16 @@ const Root = () => (
             <Route path="/sign_in">
                 <SessionNew />
             </Route>
-            <Route exact path="/">
-                <AuthenticatedContainer />
+
+            <Route>
+                <AuthenticatedContainer>
+                    <Route exact path="/">
+                        <Main />
+                    </Route>
+                    <Route path="/boards/:id">
+                        <BoardShowView />
+                    </Route>
+                </AuthenticatedContainer>
             </Route>
         </Switch>
     </Router>
