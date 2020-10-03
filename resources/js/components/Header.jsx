@@ -1,10 +1,12 @@
+/* eslint-disable camelcase */
+/* eslint-disable react/prop-types */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Nav, Button } from 'react-bootstrap';
 import ReactGravatar from 'react-gravatar';
 import { asyncActions } from '../slices/index';
 
-const Header = ({ user, dispatch, history }) => { // eslint ругается убрать ошибки, все рабоатет
+const Header = ({ user, dispatch, history }) => {
   const handleSignOutClick = async () => {
     try {
       dispatch(asyncActions.signOut());
