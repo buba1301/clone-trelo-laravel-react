@@ -6,11 +6,13 @@ import {
 import {
   boards, boardsActions, boardsFetching, createBoard, fetchDeleteBoard,
 } from './boards';
+import { currentBoardActions, currentBoard, connectToChannel } from './currentBoard';
 
 const actions = {
   ...registrationActions,
   ...sessionActions,
   ...boardsActions,
+  ...currentBoardActions,
 };
 
 const asyncActions = {
@@ -21,6 +23,7 @@ const asyncActions = {
   boardsFetching,
   createBoard,
   fetchDeleteBoard,
+  connectToChannel,
 };
 
 export {
@@ -32,4 +35,5 @@ export const createRootReducer = () => combineReducers({
   registration,
   session,
   boards,
+  currentBoard,
 });
