@@ -30,4 +30,6 @@ Route::group(['middleware' => ['jwt.verify']], function () {
     // Route::get('closed', 'DataController@closed');
 });
 
-Route::get('/translation/{id}', 'TranslationController@index');
+// Route::get('/board.')
+
+// Route::get('/translation/{id}', 'TranslationController@index');
