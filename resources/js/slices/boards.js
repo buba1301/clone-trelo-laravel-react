@@ -6,19 +6,23 @@ const slice = createSlice({
   name: 'boards',
   initialState: {
     boards: [],
+    // currentBoardId: '',
     showForm: false,
     errors: null,
     fetching: true,
+    showDeleteModal: false,
   },
   reducers: {
     setBoards: (state, { payload }) => ({ ...state, boards: payload, fetching: false }),
     addBoard: (state, { payload }) => ({ ...state, boards: [...state.boards, payload] }),
+    // setCurrentBoardId: (state, { payload }) => ({ ...state, currentBoardId: payload }),
     setShowForm: (state, { payload }) => ({ ...state, showForm: payload }),
     boardsErrors: (state, { payload }) => ({ ...state, errors: payload }),
     deleteBoard: (state, { payload: { currentBoardId } }) => {
       const filterBoards = state.boards.filter(({ id }) => id !== currentBoardId);
       return { ...state, boards: filterBoards };
     },
+    showDeleteModal: (state, { payload }) => ({ ...state, showDeleteModal: payload }),
   },
 });
 
@@ -37,7 +41,7 @@ const boardsFetching = (authToken) => async (dispatch) => {
   dispatch(boardsActions.setBoards(res.data));
 };
 
-const createBoard = (data, authToken) => async (dispatch) => {
+const createBoard = (data, authToken, history) => async (dispatch) => {
   const url = routes.boardsPath();
 
   const res = await axios.post(url, data, {
@@ -47,8 +51,9 @@ const createBoard = (data, authToken) => async (dispatch) => {
   });
 
   const { board } = res.data;
-
+  // dispatch(boardsActions.setCurrentBoardId(board.id));
   dispatch(boardsActions.addBoard(board));
+  history.push(`/boards/${board.id}`);
 };
 
 const fetchDeleteBoard = (currentBoardId, authToken) => async (dispatch) => {
