@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 import routes from '../routes';
-// import routes from '../routes';
+import echo from '../bootstrap';
 
 const slice = createSlice({ // add fetchin state
   name: 'session',
@@ -10,11 +10,13 @@ const slice = createSlice({ // add fetchin state
     socket: null,
     channel: null,
     errors: {},
+    fetchingUser: true,
   },
   reducers: {
     addCurrentUser: (state, { payload }) => ({ ...state, currentUser: payload }),
     userSignOut: (state, { payload }) => ({ ...state, currentUser: {} }),
     loginErrors: (state, { payload }) => ({ ...state, errors: payload }),
+    // setFetchingUser: (state, { payload }) => ({ ...state, fetching: payload }),
   },
 });
 
@@ -31,6 +33,10 @@ const signIn = (loginFormData) => async (dispatch) => {
   localStorage.setItem('laravelToken', token);
 
   dispatch(sessionActions.addCurrentUser(user));
+
+  echo
+    .private(`user.${user.id}`)
+    .listen('User');
 };
 
 const getCurrentUser = (authToken) => async (dispatch) => {
