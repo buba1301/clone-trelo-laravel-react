@@ -1,13 +1,14 @@
+/* eslint-disable react/prop-types */
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import _ from 'lodash';
 import { useHistory } from 'react-router-dom';
 import { Alert } from 'react-bootstrap';
 import Header from './Header.jsx';
-import Main from './Main.jsx';
+// import Main from './Main.jsx';
 import { actions, asyncActions } from '../slices/index';
 
-const AuthenticatedContainer = () => {
+const AuthenticatedContainer = (props) => {
   const currentUser = useSelector((state) => state.session.currentUser);
   const errors = useSelector((state) => state.session.errors);
   console.log(currentUser);
@@ -50,7 +51,8 @@ const AuthenticatedContainer = () => {
           />
 
           <div className="main-container">
-            <Main token={authToken} userId={currentUser.id}/>
+            {props.children}
+            {/* <Main token={authToken} userId={currentUser.id}/> */}
           </div>
         </div>
   );
