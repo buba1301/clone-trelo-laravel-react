@@ -11,6 +11,7 @@ import {
   FormControl,
   FormLabel,
   Button,
+  Spinner,
 } from 'react-bootstrap';
 import { Link, useHistory } from 'react-router-dom';
 import { setDocumentTitle } from '../utils';
@@ -18,7 +19,7 @@ import { asyncActions, actions } from '../slices/index';
 
 const SessionNew = () => {
   const errors = useSelector((state) => state.session.errors);
-  console.log(errors);
+
   const dispatch = useDispatch();
   const history = useHistory();
 
@@ -34,7 +35,7 @@ const SessionNew = () => {
       await dispatch(signIn(values));
       resetForm();
       history.push('/');
-    } catch (e) {
+    } catch (e) { // обработkа ошибку сети везде??
       const { data } = e.response;
 
       dispatch(loginErrors(data));
@@ -87,7 +88,7 @@ const SessionNew = () => {
                           </Form.Control.Feedback>
                       </FormGroup>
                       <Button variant="primary" type="submit" size="lg" block>
-                          Sign In
+                        Sign In
                       </Button>{' '}
                       <Button variant="link" size="lg" block>
                           <Link to="/sign_up">Sign up</Link>
