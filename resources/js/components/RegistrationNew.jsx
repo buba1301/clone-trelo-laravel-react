@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useFormik } from 'formik';
 import _ from 'lodash';
 import {
-  Container, Row, Col, Form, FormGroup, FormControl, FormLabel, Button,
+  Container, Row, Col, Form, FormGroup, FormControl, FormLabel, Button, Navbar,
 } from 'react-bootstrap';
 import { Link, useHistory } from 'react-router-dom';
 import { getErrors, setDocumentTitle } from '../utils';
@@ -51,9 +51,9 @@ const RegistrationsNew = () => {
       <Container>
           <Row className="justify-content-md-center">
               <Col md="auto">
-                  <header>
-                      <div className="logo" />
-                  </header>
+                  <Navbar>
+                      <Navbar.Brand className="logo" />
+                  </Navbar>
                   <Form onSubmit={f.handleSubmit}>
                       <FormGroup>
                           <FormLabel>First Name</FormLabel>
@@ -143,7 +143,7 @@ const RegistrationsNew = () => {
                       </FormGroup>
 
                       <Button variant="primary" type="submit" size="lg" block>
-                          Sign Up // add spinet slow loading
+                          Sign Up {/* add spinet slow loading */}
                       </Button>
                       <Button variant="link" size="lg" block>
                           <Link to="/sign_in">Sign in</Link>

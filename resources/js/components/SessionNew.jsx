@@ -11,6 +11,7 @@ import {
   FormControl,
   FormLabel,
   Button,
+  Navbar,
   Spinner,
 } from 'react-bootstrap';
 import { Link, useHistory } from 'react-router-dom';
@@ -54,9 +55,9 @@ const SessionNew = () => {
       <Container>
           <Row className="justify-content-md-center">
               <Col md="auto">
-                  <header>
-                      <div className="logo" />
-                  </header>
+                  <Navbar>
+                      <Navbar.Brand className="logo" />
+                  </Navbar>
                   <Form onSubmit={f.handleSubmit}>
                       <FormGroup>
                           <FormLabel>Email</FormLabel>
