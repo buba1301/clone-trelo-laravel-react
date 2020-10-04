@@ -33,7 +33,7 @@ const BoardCard = ({
 
   return (
       <>
-          <Card>
+          <Card bg="dark" text="white">
               <Card.Body>
                   <Card.Title>{name}</Card.Title>
                   <Card.Text></Card.Text>
