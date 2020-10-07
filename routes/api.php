@@ -27,9 +27,6 @@ Route::group(['middleware' => ['jwt.verify']], function () {
     Route::get('/user', 'UserController@getAuthenticatedUser');
     // нужна ли группа???
     Route::resource('/boards', 'BoardController');
-    // Route::get('closed', 'DataController@closed');
+
+    Route::post('/addUserOnBoard', 'BoardController@addUserOnBoard');
 });
-
-// Route::get('/board.')
-
-// Route::get('/translation/{id}', 'TranslationController@index');
