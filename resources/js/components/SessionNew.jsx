@@ -1,7 +1,7 @@
+/* eslint-disable max-len */
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useFormik } from 'formik';
-import _ from 'lodash';
 import {
   Container,
   Row,
@@ -12,7 +12,6 @@ import {
   FormLabel,
   Button,
   Navbar,
-  Spinner,
 } from 'react-bootstrap';
 import { Link, useHistory } from 'react-router-dom';
 import { setDocumentTitle } from '../utils';
@@ -24,23 +23,26 @@ const SessionNew = () => {
   const dispatch = useDispatch();
   const history = useHistory();
 
+  const { signIn } = asyncActions;
+  const { loginErrors } = actions;
+
+  // eslint-disable-next-line max-len
+
   useEffect(() => {
     setDocumentTitle('SignIn');
-  });
+  }, [errors]);
 
-  const handleSubmit = async (values, { resetForm }) => {
-    const { signIn } = asyncActions;
-    const { loginErrors } = actions;
-
+  const handleSubmit = async (values, { resetForm, setStatus }) => {
     try {
       await dispatch(signIn(values));
       resetForm();
       history.push('/');
-    } catch (e) { // обработkа ошибку сети везде??
+    } catch (e) {
       const { data } = e.response;
-
+      setStatus(data);
       dispatch(loginErrors(data));
     }
+    setTimeout(() => setStatus(), 5000);
   };
 
   const f = useFormik({
@@ -51,6 +53,10 @@ const SessionNew = () => {
     onSubmit: handleSubmit,
   });
 
+  console.log(useFormik({}));
+
+  const isErrors = (values) => ((!!f.status && !!values.password) ? f.status.userNotFound : null);
+
   return (
       <Container>
           <Row className="justify-content-md-center">
@@ -58,7 +64,7 @@ const SessionNew = () => {
                   <Navbar>
                       <Navbar.Brand className="logo" />
                   </Navbar>
-                  <Form onSubmit={f.handleSubmit}>
+                  <Form onSubmit={f.handleSubmit} >
                       <FormGroup>
                           <FormLabel>Email</FormLabel>
                           <FormControl
@@ -67,8 +73,9 @@ const SessionNew = () => {
                               placeholder="Email"
                               onChange={f.handleChange}
                               value={f.values.email}
+                              onBlur={f.handleBlur}
                               required
-                              // disable={f.isSubmitting}
+                              isInvalid={f.touched.password && !!isErrors(f.values)}
                           />
                       </FormGroup>
                       <FormGroup>
@@ -79,16 +86,15 @@ const SessionNew = () => {
                               placeholder="Password"
                               onChange={f.handleChange}
                               value={f.values.password}
-                              isInvalid={!!errors.userNotFound}
+                              onBlur={f.handleBlur}
+                              isInvalid={f.touched.password && !!isErrors(f.values)}
                               required
-                              // disable={f.isSubmitting}
                           />
                           <Form.Control.Feedback type="invalid">
-                              {_.has(errors, 'userNotFound')
-                                  && errors.userNotFound}
+                              {f.status ? f.status.userNotFound : null}
                           </Form.Control.Feedback>
                       </FormGroup>
-                      <Button variant="primary" type="submit" size="lg" block>
+                      <Button variant="primary" type="submit" size="lg" block >
                         Sign In
                       </Button>{' '}
                       <Button variant="link" size="lg" block>
