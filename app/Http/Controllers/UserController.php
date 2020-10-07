@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
+use App\Events\UserChannelNotification;
 
 class UserController extends Controller
 {
@@ -51,7 +52,7 @@ class UserController extends Controller
           $token = JWTAuth::attempt($credentials);
 
           if (! $token) {
-            return response()->json(['userNotFound' => 'User is not found. Check your email or password.'], 400);
+            return response()->json(['userNotFound' => 'User is not found. Check your email or password.'], 401);
           }
         } catch (JWTException $e) {
             return response()->json(['tokenProblem' => 'could_not_create_token'], 500);
