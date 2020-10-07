@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\BoardCreated;
+use App\Events\AddUserOnBoard;
 use App\Board;
+use App\User;
+use App\UserBoard;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use JWTAuth;
@@ -20,7 +22,7 @@ class BoardController extends Controller
     {
         $user = JWTAuth::parseToken()->authenticate();
 
-        $boards = $user->boards;
+        $boards = $user->ownedBoards;
 
         return response()->json($boards, 201);
     }
@@ -69,9 +71,14 @@ class BoardController extends Controller
             return response()->json(['token_absent'], $e->getStatusCode());
         }
 
-        $board = $user->boards()->make();
+        $board = $user->ownedBoards()->make();
         $board->name = $request->get('name');
         $board->save();
+
+        $id = $board->id;
+        $boardUser = $board->boardsUser()->make();
+        $boardUser->user_id = $user->id;
+        $boardUser->save();
 
         return response()->json(compact('board'), 201);
     }
@@ -121,7 +128,7 @@ class BoardController extends Controller
     public function destroy($id)
     {
         $board = Board::find($id);
-
+        $board->boardsUser()->delete();
         $board->delete();
 
         return response('Ok', 200);
@@ -131,14 +138,35 @@ class BoardController extends Controller
       метод join будет выбирать доску по id и оставлять канал открытым для изменений
      */
 
-    public function board(Request $request)
+    public function addUserOnBoard(Request $request)
     {
-        // Добавление юсера на доску
-        /*
-          Должен приходить новый пользователь, который добавляется в базу, с привязкой к этой доске и событие отсылается всем кто слушает этот канал (broadcast)
-        */
+
+
         $id = $request->get('board_id');
+        $email = $request->get('email');
+
+        $user = User::where('email', $email)->get()[0];
         $board = Board::find($id);
-        event(new BoardCreated($board));
+
+        // как не добавлять юсера повторно
+        /* $validator = UserBoard::where('board_id', $id)->where('user_id', $user->id)->$user->id->get();*/
+
+        // 'email' => Rule::unique('users')->where(function ($query) {
+        //  $query->where('account_id', 1);
+
+        /* if (count($validator) !== 0) {
+            $userAdded = 'user already added';
+            return response()->json(compact('userAdded'), 401);
+        }*/
+
+        $boardUser = $user->userBoards()->make();
+        $boardUser->board_id = $request->get('board_id');
+        $boardUser->save();
+
+        broadcast(new AddUserOnBoard($board));
+
+        $members = $board->members;
+
+        return response()->json(compact('members'), 201);
     }
 }
