@@ -14,4 +14,14 @@ class Board extends Model
     {
         return $this->belongsTo('App\User');
     }
+
+    public function boardsUser()
+    {
+        return $this->hasMany('App\UserBoard');
+    }
+
+    public function members()
+    {
+        return $this->belongsToMany('App\User', 'user_boards');
+    }
 }
