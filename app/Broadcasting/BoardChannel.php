@@ -25,10 +25,8 @@ class BoardChannel
      */
     public function join(User $user, int $board_id)
     {
-        // return $user->id === Board::findOrNew($board_id)->user_id;
         $board = Board::find($board_id);
-      return [
-          'user' => $user,
-      ];
+        $members = $board->members;
+        return [$board, $members];
     }
 }
