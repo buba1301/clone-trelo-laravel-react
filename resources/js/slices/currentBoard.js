@@ -1,54 +1,66 @@
 import { createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 import routes from '../routes';
-import echo from '../bootstrap';
 
 const slice = createSlice({
   name: 'currentBoard',
   initialState: {
     channel: '',
-    fetching: true,
+    board: {},
+    members: [],
+    showAddNewUserModal: false,
+    // fetching: true,
+    errors: {},
   },
   reducers: {
     addBoard: (state, { payload: { board } }) => ({ ...state, board }),
+    addMembers: (state, { payload: { members } }) => ({ ...state, members }),
+    showAddNewUserModal: (state, { payload }) => ({ ...state, showAddNewUserModal: payload }),
+    addErrors: (state, { payload: { errors } }) => ({ ...state, errors }),
   },
 });
 
 const currentBoardActions = slice.actions;
 const currentBoard = slice.reducer;
 
-const connectToChannel = (currentBoardId, authToken) => async (dispatch) => {
-  const url = routes.boardPathShow(currentBoardId);
-  const res = await axios.get(url, {
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
-  });
-
-  console.log(res.data);
-  const { board } = res.data;
-
-  dispatch(currentBoardActions.addBoard({ board }));
-  /* echo.private(`board.${currentBoardId}`)
-    .listen('BoardCreated', (e) => {
-      console.log(e.board);
-      dispatch(currentBoardActions.addBoard(e.board));
-    }); */
-
-  echo.join(`board.${currentBoardId}`)
-    .here((data) => {
-      console.log(data);
-    });
-  // console.log(channel);
-  // const fixTokenChannel = _.set(channel, 'options.auth.headers.X-CSRF-TOKEN', csrfToken);
-  // console.log(fixTokenChannel);
-  /* channel
-    .here((boards) => {
-      //
+const connectToChannel = (channel) => async (dispatch) => {
+  channel
+    .here(([data]) => {
+      const [board, members] = data;
+      dispatch(currentBoardActions.addBoard({ board }));
+      dispatch(currentBoardActions.addMembers({ members }));
+      console.log(board, members);
     })
-    .joining((board) => {
-      console.log(board);
-    }); */
+    .joining((data) => {
+      console.log(data);
+    })
+    .listen('AddUserOnBoard', (e) => {
+      console.log(e);
+    });
 };
 
-export { currentBoardActions, currentBoard, connectToChannel };
+const addUserOnBoard = (data, authToken, channel) => async (dispatch) => {
+  const url = routes.AddUserOnBoardPath();
+
+  try {
+    const res = await axios.post(url, data, {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    });
+
+    const { members } = res.data;
+    dispatch(currentBoardActions.addMembers({ members }));
+  } catch (e) {
+    const errors = e.response.data;
+    dispatch(currentBoardActions.addErrors({ errors }));
+    throw (e);
+  }
+};
+
+export {
+  currentBoardActions,
+  currentBoard,
+  connectToChannel,
+  addUserOnBoard,
+};
