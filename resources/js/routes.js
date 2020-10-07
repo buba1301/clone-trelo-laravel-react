@@ -9,4 +9,5 @@ export default {
   boardsPath: () => [host, prefix, 'boards'].join('/'),
   boardPathShow: (id) => [host, prefix, 'boards', id].join('/'),
   boardsPathDelete: (id) => [host, prefix, 'boards', id].join('/'),
+  AddUserOnBoardPath: () => [host, prefix, 'addUserOnBoard'].join('/'),
 };
