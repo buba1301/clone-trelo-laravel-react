@@ -6,7 +6,12 @@ import {
 import {
   boards, boardsActions, boardsFetching, createBoard, fetchDeleteBoard,
 } from './boards';
-import { currentBoardActions, currentBoard, connectToChannel } from './currentBoard';
+import {
+  currentBoardActions,
+  currentBoard,
+  connectToChannel,
+  addUserOnBoard,
+} from './currentBoard';
 
 const actions = {
   ...registrationActions,
@@ -24,6 +29,7 @@ const asyncActions = {
   createBoard,
   fetchDeleteBoard,
   connectToChannel,
+  addUserOnBoard,
 };
 
 export {
