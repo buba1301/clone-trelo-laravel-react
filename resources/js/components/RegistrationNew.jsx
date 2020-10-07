@@ -6,10 +6,10 @@ import {
   Container, Row, Col, Form, FormGroup, FormControl, FormLabel, Button, Navbar,
 } from 'react-bootstrap';
 import { Link, useHistory } from 'react-router-dom';
-import { getErrors, setDocumentTitle } from '../utils';
-import { asyncActions, actions } from '../slices/index';
 
-// add Allert "all OK"
+import { getErrors, setDocumentTitle } from '../utils';
+
+import { asyncActions, actions } from '../slices/index';
 
 const RegistrationsNew = () => {
   const errors = useSelector((state) => state.registration.errors);
@@ -143,7 +143,7 @@ const RegistrationsNew = () => {
                       </FormGroup>
 
                       <Button variant="primary" type="submit" size="lg" block>
-                          Sign Up {/* add spinet slow loading */}
+                          Sign Up
                       </Button>
                       <Button variant="link" size="lg" block>
                           <Link to="/sign_in">Sign in</Link>

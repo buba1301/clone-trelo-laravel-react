@@ -10,7 +10,7 @@ import {
 import BoardCard from './BoardCard.jsx';
 import BoardForm from './BoardForm.jsx';
 
-import { getErrors, setDocumentTitle } from '../utils';
+import { setDocumentTitle } from '../utils';
 import { actions, asyncActions } from '../slices/index';
 
 const Main = () => {
@@ -21,7 +21,6 @@ const Main = () => {
   const showForm = useSelector((state) => state.boards.showForm);
 
   const dispatch = useDispatch();
-  const history = useHistory();
 
   const authToken = localStorage.getItem('laravelToken');// maybe add in context
 
@@ -32,9 +31,7 @@ const Main = () => {
       try {
         await dispatch(asyncActions.boardsFetching(authToken));
       } catch (e) {
-        // throw (e);
         const { data } = e.response;
-        console.log(data);
         dispatch(actions.boardsErrors(data));
       }
     };
@@ -82,13 +79,13 @@ const Main = () => {
         <Spinner animation="border" role="status">
             <span className="sr-only">Loading...</span>
         </Spinner>
-    ); // добавить индикатор загрузки и на кнопках тоже
+    );
   }
 
   return (
         <Container>
           <header>
-              <h3>My boards</h3>
+              <h1>My boards</h1>
           </header>
           {renderAddNewBoard()}
           {renderBoards()}
@@ -102,15 +99,3 @@ Main.proptypes = {
 };
 
 export default Main;
-
-/*
-if (!showDeleteModal) {
-      return (
-              <ModalDelete
-                  key={board.id}
-                  showDeleteModal={showDeleteModal}
-                  handleClose={handleClose}
-                  handleDeleteBoard={handleDeleteBoard(board.id, authToken)}
-              />
-      );
-    } */

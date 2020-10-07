@@ -6,7 +6,6 @@ const slice = createSlice({
   name: 'boards',
   initialState: {
     boards: [],
-    // currentBoardId: '',
     showForm: false,
     errors: null,
     fetching: true,
@@ -15,7 +14,6 @@ const slice = createSlice({
   reducers: {
     setBoards: (state, { payload }) => ({ ...state, boards: payload, fetching: false }),
     addBoard: (state, { payload }) => ({ ...state, boards: [...state.boards, payload] }),
-    // setCurrentBoardId: (state, { payload }) => ({ ...state, currentBoardId: payload }),
     setShowForm: (state, { payload }) => ({ ...state, showForm: payload }),
     boardsErrors: (state, { payload }) => ({ ...state, errors: payload }),
     deleteBoard: (state, { payload: { currentBoardId } }) => {
@@ -51,8 +49,8 @@ const createBoard = (data, authToken, history) => async (dispatch) => {
   });
 
   const { board } = res.data;
-  // dispatch(boardsActions.setCurrentBoardId(board.id));
   dispatch(boardsActions.addBoard(board));
+
   history.push(`/boards/${board.id}`);
 };
 

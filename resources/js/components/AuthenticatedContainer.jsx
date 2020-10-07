@@ -14,7 +14,7 @@ const AuthenticatedContainer = (props) => {
   console.log(currentUser);
   const dispatch = useDispatch();
   const history = useHistory();
-  // localStorage.setItem('laravelToken', 'fghrjreej');
+
   const authToken = localStorage.getItem('laravelToken'); // может быть использовать Context
 
   useEffect(() => {
@@ -24,7 +24,6 @@ const AuthenticatedContainer = (props) => {
           await dispatch(asyncActions.getCurrentUser(authToken));
         } catch (e) {
           const { data } = e.response;
-          console.log(data);
           dispatch(actions.loginErrors(data));
         }
       };
@@ -52,7 +51,6 @@ const AuthenticatedContainer = (props) => {
 
           <div className="main-container">
             {props.children}
-            {/* <Main token={authToken} userId={currentUser.id}/> */}
           </div>
         </div>
   );

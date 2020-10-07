@@ -19,4 +19,5 @@ use App\Board;
 });*/
 // ['middleware' => ['web', 'auth']
 // Broadcast::routes(['middleware' => ['auth.api']]);
+// \App\Broadcasting\BoardChannel::class
 Broadcast::channel('board.{board_id}', \App\Broadcasting\BoardChannel::class);

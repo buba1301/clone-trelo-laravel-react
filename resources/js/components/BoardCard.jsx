@@ -5,7 +5,6 @@ import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { Card, Button } from 'react-bootstrap';
 
-// import { getErrors, setDocumentTitle } from '../utils';
 import { actions, asyncActions } from '../slices/index';
 
 import ModalDelete from './ModalDelete.jsx';
@@ -26,7 +25,7 @@ const BoardCard = ({
       await dispatch(asyncActions.fetchDeleteBoard(id, token));
       dispatch(actions.showDeleteModal(!showDeleteModal));
     } catch (e) {
-      const { data } = e.responce;
+      const { data } = e.response;
       dispatch(actions.boardsErrors(data));
     }
   };

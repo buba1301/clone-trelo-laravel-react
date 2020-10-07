@@ -3,7 +3,7 @@ import axios from 'axios';
 import routes from '../routes';
 import echo from '../bootstrap';
 
-const slice = createSlice({ // add fetchin state
+const slice = createSlice({
   name: 'session',
   initialState: {
     currentUser: {},
@@ -16,7 +16,6 @@ const slice = createSlice({ // add fetchin state
     addCurrentUser: (state, { payload }) => ({ ...state, currentUser: payload }),
     userSignOut: (state, { payload }) => ({ ...state, currentUser: {} }),
     loginErrors: (state, { payload }) => ({ ...state, errors: payload }),
-    // setFetchingUser: (state, { payload }) => ({ ...state, fetching: payload }),
   },
 });
 
@@ -33,10 +32,6 @@ const signIn = (loginFormData) => async (dispatch) => {
   localStorage.setItem('laravelToken', token);
 
   dispatch(sessionActions.addCurrentUser(user));
-
-  echo
-    .private(`user.${user.id}`)
-    .listen('User');
 };
 
 const getCurrentUser = (authToken) => async (dispatch) => {
@@ -53,7 +48,7 @@ const getCurrentUser = (authToken) => async (dispatch) => {
 };
 
 const signOut = () => async (dispatch) => {
-  const url = routes.userDeleteSessionPath(); // добавить запрос чтобы удалить из базы
+  const url = routes.userDeleteSessionPath();
 
   localStorage.removeItem('laravelToken');
 

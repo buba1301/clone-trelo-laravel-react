@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React, { useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { useFormik } from 'formik';
 import { useSelector } from 'react-redux';
@@ -7,18 +7,16 @@ import { useHistory } from 'react-router-dom';
 import {
   Modal, Form, FormGroup, FormControl, Button,
 } from 'react-bootstrap';
+
 import { actions, asyncActions } from '../slices';
 
 const BoardsForm = ({
-  dispatch, errors, onClick, token,
+  dispatch, onClick, token,
 }) => {
   const showForm = useSelector((state) => state.boards.showForm);
 
-  const currentBoardId = useSelector((state) => state.boards.currentBoardId);
-
   const history = useHistory();
-  console.log(showForm);
-  console.log(currentBoardId);
+
   const handleSubmit = (values) => {
     try {
       dispatch(asyncActions.createBoard(values, token, history));
