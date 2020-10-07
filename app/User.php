@@ -38,9 +38,19 @@ class User extends Authenticatable implements JWTSubject
         'email_verified_at' => 'datetime',
     ];
 
-    public function boards()
+    public function ownedBoards()
     {
         return $this->hasMany('App\Board', 'user_id');
+    }
+
+    public function userBoards()
+    {
+        return $this->hasMany('App\UserBoard');
+    }
+
+    public function boards()
+    {
+        return $this->belongsToMany('App\Board', 'user_boards');
     }
 
     public function getJWTIdentifier()
