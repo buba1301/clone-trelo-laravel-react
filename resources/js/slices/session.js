@@ -10,12 +10,13 @@ const slice = createSlice({
     socket: null,
     channel: null,
     errors: {},
-    fetchingUser: true,
+    fetchingUser: false,
   },
   reducers: {
     addCurrentUser: (state, { payload }) => ({ ...state, currentUser: payload }),
     userSignOut: (state, { payload }) => ({ ...state, currentUser: {} }),
     loginErrors: (state, { payload }) => ({ ...state, errors: payload }),
+    setFetchihg: (state, { payload }) => ({ ...state, fetchingUser: payload }),
   },
 });
 
@@ -23,6 +24,8 @@ const session = slice.reducer;
 const sessionActions = slice.actions;
 
 const signIn = (loginFormData) => async (dispatch) => {
+  dispatch(sessionActions.setFetchihg(true));
+
   const url = routes.loginPath();
 
   const res = await axios.post(url, loginFormData);
@@ -48,8 +51,6 @@ const getCurrentUser = (authToken) => async (dispatch) => {
 };
 
 const signOut = () => async (dispatch) => {
-  const url = routes.userDeleteSessionPath();
-
   localStorage.removeItem('laravelToken');
 
   dispatch(sessionActions.userSignOut());
