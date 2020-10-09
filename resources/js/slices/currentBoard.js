@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import { createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 import routes from '../routes';
@@ -8,14 +9,54 @@ const slice = createSlice({
     channel: '',
     board: {},
     members: [],
+    lists: {},
+    tasks: {},
+
+    membersUIState: {},
+    listsUIState: {},
+    tasksUiState: {},
+
     showAddNewUserModal: false,
+    showAddNewListForm: false,
+
     // fetching: true,
     errors: {},
   },
   reducers: {
     addBoard: (state, { payload: { board } }) => ({ ...state, board }),
     addMembers: (state, { payload: { members } }) => ({ ...state, members }),
-    showAddNewUserModal: (state, { payload }) => ({ ...state, showAddNewUserModal: payload }),
+    addNewList: (state, { payload: { lists } }) => ({ ...state, lists }),
+    addNewTasks: (state, { payload: { tasks } }) => ({ ...state, tasks }),
+
+    addNewTaskUIState: (state, { payload: { tasksUIState } }) => (({
+      ...state,
+      tasksUIState,
+    })),
+    addNewListsUIState: (state, { payload }) => (({
+      ...state,
+      listsUIState: payload,
+    })),
+
+    showAddNewUserModal: (state, { payload }) => ({
+      ...state,
+      showAddNewUserModal: payload,
+    }),
+    showAddNewListForm: (state, { payload }) => ({
+      ...state,
+      showAddNewListForm: payload,
+    }),
+    showEditNameListForm: (state, { payload: { id, showForm } }) => {
+      const { listsUIState } = state;
+      const list = listsUIState.byId[id];
+      list.showEditNameListForm = showForm;
+      return state;
+    },
+    showAddNewTaskFrom: (state, { payload: { id, showForm } }) => {
+      const { tasksUIState } = state;
+      const task = tasksUIState.byId[id];
+      task.showAddNewTaskFrom = showForm;
+      return state;
+    },
     addErrors: (state, { payload: { errors } }) => ({ ...state, errors }),
   },
 });
@@ -53,8 +94,8 @@ const addUserOnBoard = (data, authToken, channel) => async (dispatch) => {
     dispatch(currentBoardActions.addMembers({ members }));
   } catch (e) {
     const errors = e.response.data;
-    dispatch(currentBoardActions.addErrors({ errors }));
     throw (e);
+    // dispatch(currentBoardActions.addErrors({ errors }));
   }
 };
 
