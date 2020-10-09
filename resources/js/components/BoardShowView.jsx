@@ -8,12 +8,14 @@ import ReactGravatar from 'react-gravatar';
 import { actions, asyncActions } from '../slices/index';
 
 import ModalAddNewUserOnBoard from './ModalAddNewUserOnBoard.jsx';
+import BoardMain from './BoardMain.jsx';
 import echo from '../bootstrap';
 
 const BoardShowView = () => {
   const board = useSelector(({ currentBoard }) => currentBoard.board);
   const members = useSelector(({ currentBoard }) => currentBoard.members);
   const showModal = useSelector(({ currentBoard }) => currentBoard.showAddNewUserModal);
+  const errorsForm = useSelector(({ currentBoard }) => currentBoard.errors);
 
   const { id } = useParams();
 
@@ -27,27 +29,22 @@ const BoardShowView = () => {
     dispatch(asyncActions.connectToChannel(channel, authToken));
   }, [board]);
 
-  if (!board) {
-    return (
-          <Spinner animation="border" role="status">
-              <span className="sr-only">Loading...</span>
-          </Spinner>
-    );
-  }
-
-  const handleModal = async () => {
-    await dispatch(actions.showAddNewUserModal(!showModal));
+  const handleModal = () => {
+    dispatch(actions.showAddNewUserModal(!showModal));
   };
 
   const handleSubmit = async ({ email }, { resetForm }) => {
     const data = { email, board_id: id };
     try {
       await dispatch(asyncActions.addUserOnBoard(data, authToken, channel));
+      dispatch(actions.showAddNewUserModal(!showModal));
+      resetForm();
     } catch (e) {
       console.log(e.response.data);
+      const errors = e.response.data;
+      dispatch(actions.addErrors({ errors }));
+      // return;
     }
-    dispatch(actions.showAddNewUserModal(!showModal));
-    resetForm();
   };
 
   const renderMembers = () => (
@@ -58,9 +55,17 @@ const BoardShowView = () => {
           </>
   );
 
+  if (!board) {
+    return (
+            <Spinner animation="border" role="status">
+                <span className="sr-only">Loading...</span>
+            </Spinner>
+    );
+  }
+
   return (
       <Container>
-          <Navbar>
+          <Navbar bg="primary" variant="dark">
               <Nav className="mr-auto">
                   <h3>{board.name}</h3>
               </Nav>
@@ -69,13 +74,14 @@ const BoardShowView = () => {
                   +
               </Button>
           </Navbar>
-          <div>Test boards {id}</div>
+          <BoardMain />
           <ModalAddNewUserOnBoard
+              dispatch={dispatch}
               showModal={showModal}
-              handleModal={handleModal}
               handleSubmit={handleSubmit}
               channel={channel}
               members={members}
+              errorsForm={errorsForm}
           />
       </Container>
   );
