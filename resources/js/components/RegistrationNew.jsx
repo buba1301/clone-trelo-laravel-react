@@ -1,9 +1,9 @@
+/* eslint-disable max-len */
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useFormik } from 'formik';
-import _ from 'lodash';
 import {
-  Container, Row, Col, Form, FormGroup, FormControl, FormLabel, Button, Navbar,
+  Container, Row, Col, Form, FormGroup, FormControl, FormLabel, Button, Navbar, Spinner,
 } from 'react-bootstrap';
 import { Link, useHistory } from 'react-router-dom';
 
@@ -12,7 +12,9 @@ import { getErrors, setDocumentTitle } from '../utils';
 import { asyncActions, actions } from '../slices/index';
 
 const RegistrationsNew = () => {
-  const errors = useSelector((state) => state.registration.errors);
+  const errors = useSelector(({ registration }) => registration.errors);
+  const disableSubmitButton = useSelector(({ registration }) => registration.regUIState.disableSubmitButton);
+  const fetching = useSelector(({ registration }) => registration.fetching);
 
   const dispatch = useDispatch();
   const history = useHistory();
@@ -21,18 +23,31 @@ const RegistrationsNew = () => {
     setDocumentTitle('SignUp');
   });
 
-  const handleSubmit = async (values, { resetForm }) => {
-    const { singUp } = asyncActions;
-    const { registrationErrors } = actions;
+  const handleClick = () => {
+    const errorsUpdate = {};
+    dispatch(actions.registrationErrors(errorsUpdate));
+    dispatch(actions.setSubmitButton(false));
+  };
 
+  const handleSubmit = async (values, { resetForm }) => {
     try {
-      await dispatch(singUp(values));
+      await dispatch(asyncActions.singUp(values));
+      dispatch(actions.setFetching(false));
       resetForm();
       history.push('/');
     } catch (e) {
       const { data } = e.response;
+      dispatch(actions.setFetching(false));
+      dispatch(actions.registrationErrors(JSON.parse(data)));
+      dispatch(actions.setSubmitButton(true));
+    }
+  };
 
-      dispatch(registrationErrors(JSON.parse(data)));
+  const validate = ({ email, password }) => {
+    if (!email || !password) {
+      const errorsUpdate = {};
+      dispatch(actions.registrationErrors(errorsUpdate));
+      dispatch(actions.setSubmitButton(false));
     }
   };
 
@@ -44,6 +59,7 @@ const RegistrationsNew = () => {
       password: '',
       password_confirmation: '',
     },
+    validate,
     onSubmit: handleSubmit,
   });
 
@@ -65,11 +81,9 @@ const RegistrationsNew = () => {
                               value={f.values.first_name}
                               isInvalid={!!errors.first_name}
                               required
-                              // disable={f.isSubmitting}
                           />
                           <FormControl.Feedback type="invalid">
-                              {_.has(errors, 'first_name')
-                                  && getErrors(errors, 'first_name')}
+                              {errors.first_name ? getErrors(errors, 'first_name') : null}
                           </FormControl.Feedback>
                       </FormGroup>
 
@@ -83,11 +97,9 @@ const RegistrationsNew = () => {
                               value={f.values.last_name}
                               isInvalid={!!errors.last_name}
                               required
-                              // disable={f.isSubmitting}
                           />
                           <FormControl.Feedback type="invalid">
-                              {_.has(errors, 'last_name')
-                                  && getErrors(errors, 'last_name')}
+                              {errors.last_name ? getErrors(errors, 'last_name') : null}
                           </FormControl.Feedback>
                       </FormGroup>
 
@@ -101,12 +113,10 @@ const RegistrationsNew = () => {
                               value={f.values.email}
                               isInvalid={!!errors.email}
                               required
-                              // disable={f.isSubmitting}
                           />
 
                           <Form.Control.Feedback type="invalid">
-                              {_.has(errors, 'email')
-                                  && getErrors(errors, 'email')}
+                              {errors.email ? getErrors(errors, 'email') : null}
                           </Form.Control.Feedback>
                       </FormGroup>
 
@@ -120,11 +130,9 @@ const RegistrationsNew = () => {
                               value={f.values.password}
                               isInvalid={!!errors.password}
                               required
-                              // disable={f.isSubmitting}
                           />
                           <Form.Control.Feedback type="invalid">
-                              {_.has(errors, 'password')
-                                  && getErrors(errors, 'password')}
+                              {errors.password ? getErrors(errors, 'password') : null}
                           </Form.Control.Feedback>
                       </FormGroup>
 
@@ -142,10 +150,23 @@ const RegistrationsNew = () => {
                           />
                       </FormGroup>
 
-                      <Button variant="primary" type="submit" size="lg" block>
-                          Sign Up
-                      </Button>
-                      <Button variant="link" size="lg" block>
+                      {fetching
+                        ? <Button variant="primary" block disabled>
+                              <Spinner
+                                  as="span"
+                                  animation="grow"
+                                  size="sm"
+                                  role="status"
+                                  aria-hidden="true"
+                              />
+                              Loading...
+                            </Button>
+                        : <Button variant="primary" type="submit" size="lg" block disabled={disableSubmitButton}>
+                              Sign Up
+                            </Button>
+                      }
+
+                      <Button variant="link" size="lg" block onClick={handleClick}>
                           <Link to="/sign_in">Sign in</Link>
                       </Button>
                   </Form>
