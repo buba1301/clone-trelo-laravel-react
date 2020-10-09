@@ -7,6 +7,7 @@ use App\Board;
 use App\User;
 use App\UserBoard;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Validator;
 use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
@@ -140,32 +141,42 @@ class BoardController extends Controller
 
     public function addUserOnBoard(Request $request)
     {
-
-
         $id = $request->get('board_id');
         $email = $request->get('email');
+
+        $messageUserNotFound = [
+            'email' => 'User not found',
+
+        ];
+
+        if (!User::where('email', '=', $email)->exists()) {
+            return response()->json($messageUserNotFound, 401);
+        };
 
         $user = User::where('email', $email)->get()[0];
         $board = Board::find($id);
 
-        // как не добавлять юсера повторно
-        /* $validator = UserBoard::where('board_id', $id)->where('user_id', $user->id)->$user->id->get();*/
+        $members = $board->members->toArray();
 
-        // 'email' => Rule::unique('users')->where(function ($query) {
-        //  $query->where('account_id', 1);
+        $func = function($value) {
+            return $value['email'];
+        };
 
-        /* if (count($validator) !== 0) {
-            $userAdded = 'user already added';
-            return response()->json(compact('userAdded'), 401);
-        }*/
+        $emails = array_map($func, $members);
+
+        $messageUserWasAdded = [
+            'email' => 'User already added. Clear form and try again',
+        ];
+
+        if (in_array($email, $emails)) {
+            return response()->json($messageUserWasAdded, 401);
+        }
 
         $boardUser = $user->userBoards()->make();
         $boardUser->board_id = $request->get('board_id');
         $boardUser->save();
 
         broadcast(new AddUserOnBoard($board));
-
-        $members = $board->members;
 
         return response()->json(compact('members'), 201);
     }
