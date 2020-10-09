@@ -1,25 +1,24 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useSelector, useDispatch } from 'react-redux';
 import { useFormik } from 'formik';
 
 import {
   Button, Modal, Form, FormGroup, FormControl,
 } from 'react-bootstrap';
 
+import { actions, asyncActions } from '../slices/index';
+
 const ModalAddNewUserOnBoard = ({
-  showModal, handleModal, handleSubmit, channel, members,
+  dispatch, showModal, handleSubmit, channel, members, errorsForm,
 }) => {
   const validate = (values) => {
-    const errors = {};
-
-    const filtredMembers = members.filter(({ email }) => email === values.email);
-    console.log(filtredMembers);
-
-    if (filtredMembers.length > 0) {
-      errors.email = 'User was added';
+    // let errors = errorsForm;
+    if (!values.email) {
+      const errors = {};
+      dispatch(actions.addErrors({ errors }));
+      return errors;
     }
-
-    return errors;
   };
 
   const f = useFormik({
@@ -29,7 +28,14 @@ const ModalAddNewUserOnBoard = ({
     validate,
     onSubmit: handleSubmit,
   });
-  // добавить валидацию отсутсвия пользователя в БД
+
+  const handleModal = () => {
+    const errors = {};
+    dispatch(actions.addErrors({ errors }));
+    dispatch(actions.showAddNewUserModal(!showModal));
+    f.resetForm();
+  };
+
   return (
       <Modal size="sm" show={showModal} onHide={handleModal}>
           <Modal.Header closeButton>
@@ -46,14 +52,14 @@ const ModalAddNewUserOnBoard = ({
                           onBlur={f.handleBlur}
                           value={f.values.email}
                           disabled={f.isSubmitting}
-                          isInvalid={!!f.errors.email}
+                          isInvalid={!!errorsForm.email}
                           required
                       />
                       <Form.Control.Feedback type="invalid">
-                          {f.errors.email ? f.errors.email : null}
+                          {errorsForm.email ? errorsForm.email : null}
                       </Form.Control.Feedback>
                   </FormGroup>
-                  <Button variant="primary" type="submit" disabled={f.errors.email}>
+                  <Button variant="primary" type="submit" disabled={errorsForm.email ? true : null}>
                       Add user
                   </Button>
                   or
