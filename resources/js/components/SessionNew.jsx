@@ -12,13 +12,15 @@ import {
   FormLabel,
   Button,
   Navbar,
+  Spinner,
 } from 'react-bootstrap';
 import { Link, useHistory } from 'react-router-dom';
 import { setDocumentTitle } from '../utils';
 import { asyncActions, actions } from '../slices/index';
 
 const SessionNew = () => {
-  const errors = useSelector((state) => state.session.errors);
+  const errors = useSelector(({ session }) => session.errors);
+  const fetchingUser = useSelector(({ session }) => session.fetchingUser);
 
   const dispatch = useDispatch();
   const history = useHistory();
@@ -32,17 +34,29 @@ const SessionNew = () => {
     setDocumentTitle('SignIn');
   }, [errors]);
 
+  const handleClick = () => {
+    const errorsUpdate = {};
+    dispatch(actions.loginErrors(errorsUpdate));
+  };
+
   const handleSubmit = async (values, { resetForm, setStatus }) => {
     try {
       await dispatch(signIn(values));
+      dispatch(actions.setFetchihg(false));
       resetForm();
       history.push('/');
     } catch (e) {
       const { data } = e.response;
-      setStatus(data);
+      dispatch(actions.setFetchihg(false));
       dispatch(loginErrors(data));
     }
-    setTimeout(() => setStatus(), 5000);
+  };
+
+  const validate = ({ email, password }) => {
+    if (!email || !password) {
+      const errorsUpdate = {};
+      dispatch(actions.loginErrors(errorsUpdate));
+    }
   };
 
   const f = useFormik({
@@ -50,12 +64,9 @@ const SessionNew = () => {
       email: '',
       password: '',
     },
+    validate,
     onSubmit: handleSubmit,
   });
-
-  console.log(useFormik({}));
-
-  const isErrors = (values) => ((!!f.status && !!values.password) ? f.status.userNotFound : null);
 
   return (
       <Container>
@@ -75,7 +86,8 @@ const SessionNew = () => {
                               value={f.values.email}
                               onBlur={f.handleBlur}
                               required
-                              isInvalid={f.touched.password && !!isErrors(f.values)}
+                              isInvalid={!!errors.userNotFound}
+                              disabled={fetchingUser}
                           />
                       </FormGroup>
                       <FormGroup>
@@ -87,17 +99,30 @@ const SessionNew = () => {
                               onChange={f.handleChange}
                               value={f.values.password}
                               onBlur={f.handleBlur}
-                              isInvalid={f.touched.password && !!isErrors(f.values)}
+                              isInvalid={!!errors.userNotFound}
+                              disabled={fetchingUser}
                               required
                           />
                           <Form.Control.Feedback type="invalid">
-                              {f.status ? f.status.userNotFound : null}
+                              {errors.userNotFound ? errors.userNotFound : null}
                           </Form.Control.Feedback>
                       </FormGroup>
-                      <Button variant="primary" type="submit" size="lg" block >
-                        Sign In
-                      </Button>{' '}
-                      <Button variant="link" size="lg" block>
+                      {fetchingUser
+                        ? <Button variant="primary" block disabled>
+                                <Spinner
+                                  as="span"
+                                  animation="grow"
+                                  size="sm"
+                                  role="status"
+                                  aria-hidden="true"
+                                />
+                                Loading...
+                            </Button>
+                        : <Button variant="primary" type="submit" size="lg" block disable={errors.userNotFound ? 'true' : 'false'}>
+                              Sign In
+                            </Button>
+                      }{' '}
+                      <Button variant="link" size="lg" block onClick={handleClick}>
                           <Link to="/sign_up">Sign up</Link>
                       </Button>
                   </Form>
