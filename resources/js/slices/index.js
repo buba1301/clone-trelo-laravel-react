@@ -11,6 +11,14 @@ import {
   currentBoard,
   connectToChannel,
   addUserOnBoard,
+  getCurrentBoard,
+  createBoardList,
+  updateListName,
+  fetchDeleteList,
+  createListTask,
+  updateTaskName,
+  fetchDeleteTask,
+  getCurrentTasks,
 } from './currentBoard';
 
 const actions = {
@@ -30,6 +38,14 @@ const asyncActions = {
   fetchDeleteBoard,
   connectToChannel,
   addUserOnBoard,
+  getCurrentBoard,
+  createBoardList,
+  updateListName,
+  fetchDeleteList,
+  createListTask,
+  updateTaskName,
+  fetchDeleteTask,
+  getCurrentTasks,
 };
 
 export {
