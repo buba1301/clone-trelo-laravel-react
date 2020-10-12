@@ -27,6 +27,8 @@ class BoardChannel
     {
         $board = Board::find($board_id);
         $members = $board->members;
-        return [$board, $members];
+        $lists = $board->lists;
+        $tasks = $board->tasks;
+        return [$board, $members, $lists, $tasks];
     }
 }
