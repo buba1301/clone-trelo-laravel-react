@@ -1,16 +1,152 @@
+/* eslint-disable max-len */
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useFormik } from 'formik';
 import {
   Button, Form, FormControl, FormGroup, Row, Col, Container, Dropdown, ButtonGroup, DropdownButton,
 } from 'react-bootstrap';
 import { actions, asyncActions } from '../../slices/index';
 
-const Body = () => {
-  const a = 0;
+import ModalDelete from '../ModalDelete.jsx';
+
+const Body = ({
+  task, listId, dispatch, authToken, showDeleteModal,
+}) => {
+  const { id, name } = task;
+
+  const showEditNameTaskForm = useSelector(
+    ({ currentBoard }) => currentBoard.tasksUIState.byId[id].showEditNameTaskForm,
+  );
+
+  const handleOpenCloseForm = () => {
+    dispatch(
+      actions.showEditNameTaskFrom({
+        taskId: id,
+        showFrom: !showEditNameTaskForm,
+      }),
+    );
+  };
+
+  const handleCloseDelete = () => dispatch(actions.showDeleteModal(!showDeleteModal));
+  const handleOpenDelete = () => dispatch(actions.showDeleteModal(!showDeleteModal));
+
+  const handleDelete = () => {
+    dispatch(asyncActions.fetchDeleteTask(listId, id, authToken));
+    dispatch(actions.showDeleteModal(!showDeleteModal));
+  };
+
+  const handleSubmit = (values, { resetForm }) => {
+    try {
+      dispatch(
+        asyncActions.updateTaskName(values, listId, id, authToken),
+      );
+      dispatch(
+        actions.showEditNameTaskFrom({
+          taskId: id,
+          showFrom: !showEditNameTaskForm,
+        }),
+      );
+      resetForm();
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const f = useFormik({
+    initialValues: {
+      name: `${name}`,
+    },
+    onSubmit: handleSubmit,
+  });
+
+  if (showEditNameTaskForm) {
+    return (
+            <Form onSubmit={f.handleSubmit}>
+                <FormGroup>
+                    <FormControl
+                        name="name"
+                        type="text"
+                        // placeholder={name}
+                        onChange={f.handleChange}
+                        onBlur={f.handleBlur}
+                        value={f.values.name}
+                        disabled={f.isSubmitting}
+                        isInvalid={!!f.errors.email}
+                        required
+                    />
+                    <Form.Control.Feedback type="invalid"></Form.Control.Feedback>
+                </FormGroup>
+                <Button variant="dark" type="submit">
+                    Edit name
+                </Button>
+                or
+                <Button variant="link" onClick={handleOpenCloseForm}>
+                    Cancel
+                </Button>
+            </Form>
+    );
+  }
 
   return (
-        <div>Textx task</div>
+      <>
+          <li className="list-group-item">
+              <div className="form-check form-check-inline">
+                  <input
+                      className="form-check-input position-static"
+                      type="radio"
+                      name="taskRadio"
+                      id={`taskRadio${id}`}
+                      value="option1"
+                  />
+                  <label
+                      className="form-check-label"
+                      htmlFor={`taskRadio${id}`}
+                  >
+                      {name}
+                  </label>
+                  <div className="dropright">
+                      <a
+                          className="nav-link dropdown-toggle"
+                          data-toggle="dropdown"
+                          href="#"
+                          role="button"
+                          aria-haspopup="true"
+                          aria-expanded="false"
+                      ></a>
+                      <div className="dropdown-menu">
+                          <button
+                              className="btn btn-link dropdown-item"
+                              href="#"
+                              onClick={handleOpenCloseForm}
+                          >
+                              Edit task
+                          </button>
+                          <div
+                              role="separator"
+                              className="dropdown-divider"
+                          ></div>
+                          <a
+                              className="dropdown-item"
+                              href="#three"
+                              onClick={handleOpenDelete}
+                          >
+                              Delete task
+                          </a>
+                      </div>
+                  </div>
+              </div>
+          </li>
+          <ModalDelete
+              showDeleteModal={showDeleteModal}
+              handleClose={handleCloseDelete}
+              handleDelete={handleDelete}
+              type={'task'}
+          />
+      </>
   );
 };
 
 export default Body;
+
+// {f.errors.name ? f.errors.name : null}
+// disabled={f.errors.name}
