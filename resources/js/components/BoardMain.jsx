@@ -12,58 +12,38 @@ import ListView from './ListView/ListView.jsx';
 
 import echo from '../bootstrap';
 
-const BoardMain = () => {
+const BoardMain = ({ boardId, authToken, history }) => {
   const showAddNewListFrom = useSelector(({ currentBoard }) => currentBoard.showAddNewListForm);
-  // const lists = [];
-
-  const lists = {
-    byId: {
-      1: { name: 'BlaBla', id: 1 }, 2: { name: 'BlaBla', id: 2 }, 3: { name: 'BlaBla', id: 3 }, 4: { name: 'BlaBla', id: 4 }, 5: { name: 'BlaBla', id: 5 },
-    },
-    allIds: [1, 2, 3, 4, 5],
-  };
-
-  const listsUIState = {
-    byId: {
-      1: { showEditNameListForm: false }, 2: { showEditNameListForm: false }, 3: { showEditNameListForm: false }, 4: { showEditNameListForm: false }, 5: { showEditNameListForm: false },
-    },
-    allIds: [1, 2, 3, 4, 5],
-  };
-
-  const mapped = lists.allIds.map((id) => lists.byId[id]);
-
-  const tasks = { byId: { 1: { name: 'BlaBla', id: 1, showAddNewTaskFrom: false }, 2: { name: 'BlaBla', id: 2, showAddNewTaskFrom: false } }, allIds: [1, 2] };
-
-  const tasksUIState = {
-    byId: {
-      1: { showAddNewTaskFrom: false }, 2: { showAddNewTaskFrom: false }, 3: { showAddNewTaskFrom: false }, 4: { showAddNewTaskFrom: false }, 5: { showAddNewTaskFrom: false },
-    },
-    allIds: [1, 2, 3, 4, 5],
-  };
+  const showDeleteModal = useSelector(({ boards }) => boards.showDeleteModal);
+  const lists = useSelector(({ currentBoard }) => currentBoard.lists);
+  const fetching = useSelector(({ currentBoard }) => currentBoard.fetching);
 
   const dispatch = useDispatch();
-
-  dispatch(actions.addNewList({ lists }));
-  dispatch(actions.addNewTasks({ tasks }));
-  dispatch(actions.addNewTaskUIState({ tasksUIState }));
-  dispatch(actions.addNewListsUIState(listsUIState));
 
   return (
       <div className="container">
           <div className="row">
-            {(!isEmpty(mapped))
-              ? mapped.map(({ name, id }) => (
-                <ListView
-                  key={id}
-                  id={id}
-                  name={name}
+              {!isEmpty(lists)
+                ? lists.map(({ name, id }) => (
+                        <ListView
+                            key={id}
+                            listId={id}
+                            name={name}
+                            authToken={authToken}
+                            dispatch={dispatch}
+                            boardId={boardId}
+                            fetching={fetching}
+                            showDeleteModal={showDeleteModal}
+                        />
+                ))
+                : null}
+              <AddNewList
                   dispatch={dispatch}
-                />))
-              : null}
-                <AddNewList
-                    dispatch={dispatch}
-                    showAddNewListForm={showAddNewListFrom}
-                />
+                  showAddNewListForm={showAddNewListFrom}
+                  boardId={boardId}
+                  authToken={authToken}
+                  history={history}
+              />
           </div>
       </div>
   );
