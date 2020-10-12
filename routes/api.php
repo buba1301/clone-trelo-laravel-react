@@ -25,7 +25,8 @@ Route::post('/login', 'UserController@authenticate');
 
 Route::group(['middleware' => ['jwt.verify']], function () {
     Route::get('/user', 'UserController@getAuthenticatedUser');
-    // нужна ли группа???
+    Route::apiResource('/lists.tasks', 'ListTaskController');
+    Route::resource('/boards.lists', 'BoardListController');
     Route::resource('/boards', 'BoardController');
 
     Route::post('/addUserOnBoard', 'BoardController@addUserOnBoard');
