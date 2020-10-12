@@ -23,10 +23,7 @@ const BoardsForm = ({
       dispatch(actions.setShowForm(!showForm));
     } catch (e) {
       console.log(e.response);
-      // dispatch(actions.setErrors(e.response));
     }
-    // history.push(`/boards/${currentBoardId}`);
-    // resetForm();
   };
 
   const f = useFormik({
