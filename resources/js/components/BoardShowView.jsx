@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import {
   Container, Spinner, Navbar, Nav, Button,
 } from 'react-bootstrap';
@@ -22,6 +22,8 @@ const BoardShowView = () => {
   const authToken = localStorage.getItem('laravelToken');
 
   const dispatch = useDispatch();
+
+  const history = useHistory();
 
   const channel = echo.join(`board.${id}`);
 
@@ -65,16 +67,18 @@ const BoardShowView = () => {
 
   return (
       <Container>
-          <Navbar bg="primary" variant="dark">
-              <Nav className="mr-auto">
-                  <h3>{board.name}</h3>
-              </Nav>
-              {renderMembers()}
-              <Button variant="outline-dark" onClick={handleModal}>
-                  +
-              </Button>
-          </Navbar>
-          <BoardMain />
+          <Container>
+              <Navbar bg="primary" variant="dark">
+                  <Nav className="mr-auto">
+                      <h3>{board.name}</h3>
+                  </Nav>
+                  {renderMembers()}
+                  <Button variant="outline-dark" onClick={handleModal}>
+                      +
+                  </Button>
+              </Navbar>
+          </Container>
+          <BoardMain boardId={id} authToken={authToken} history={history} />
           <ModalAddNewUserOnBoard
               dispatch={dispatch}
               showModal={showModal}
