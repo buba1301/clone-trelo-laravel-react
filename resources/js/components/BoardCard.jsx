@@ -47,7 +47,8 @@ const BoardCard = ({
           <ModalDelete
               showDeleteModal={showDeleteModal}
               handleClose={handleClose}
-              handleDeleteBoard={handleDeleteBoard}
+              handleDelete={handleDeleteBoard}
+              type={'board'}
           />
       </>
   );
