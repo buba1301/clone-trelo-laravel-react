@@ -13,7 +13,7 @@ export default {
   boardPathShow: (boardId) => [host, prefix, 'boards', boardId].join('/'),
   boardsPathDelete: (boardId) => [host, prefix, 'boards', boardId].join('/'),
 
-  addUserOnBoardPath: () => [host, prefix, 'addUserOnBoard'].join('/'),
+  addUserOnBoardPath: (boardId) => [host, prefix, 'boards', boardId, 'users'].join('/'),
 
   boardsListsPath: (boardId) => [host, prefix, 'boards', boardId, 'lists'].join('/'),
   boardsListsPatchPath: (boardId, listId) => [host, prefix, 'boards', boardId, 'lists', listId].join('/'),
