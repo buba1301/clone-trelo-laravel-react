@@ -130,6 +130,8 @@ class BoardController extends Controller
     {
         $board = Board::find($id);
         $board->boardsUser()->delete();
+        $board->tasks()->delete();
+        $board->lists()->delete();
         $board->delete();
 
         return response('Ok', 200);
@@ -139,45 +141,4 @@ class BoardController extends Controller
       метод join будет выбирать доску по id и оставлять канал открытым для изменений
      */
 
-    public function addUserOnBoard(Request $request)
-    {
-        $id = $request->get('board_id');
-        $email = $request->get('email');
-
-        $messageUserNotFound = [
-            'email' => 'User not found',
-
-        ];
-
-        if (!User::where('email', '=', $email)->exists()) {
-            return response()->json($messageUserNotFound, 401);
-        };
-
-        $user = User::where('email', $email)->get()[0];
-        $board = Board::find($id);
-
-        $members = $board->members->toArray();
-
-        $func = function($value) {
-            return $value['email'];
-        };
-
-        $emails = array_map($func, $members);
-
-        $messageUserWasAdded = [
-            'email' => 'User already added. Clear form and try again',
-        ];
-
-        if (in_array($email, $emails)) {
-            return response()->json($messageUserWasAdded, 401);
-        }
-
-        $boardUser = $user->userBoards()->make();
-        $boardUser->board_id = $request->get('board_id');
-        $boardUser->save();
-
-        broadcast(new AddUserOnBoard($board));
-
-        return response()->json(compact('members'), 201);
-    }
 }
