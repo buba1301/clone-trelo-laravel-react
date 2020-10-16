@@ -26,6 +26,7 @@ Route::post('/login', 'UserController@authenticate');
 Route::group(['middleware' => ['jwt.verify']], function () {
     Route::get('/user', 'UserController@getAuthenticatedUser');
     Route::apiResource('/lists.tasks', 'ListTaskController');
+    Route::resource('/boards.users', 'BoardUserController');
     Route::resource('/boards.lists', 'BoardListController');
     Route::resource('/boards', 'BoardController');
 
