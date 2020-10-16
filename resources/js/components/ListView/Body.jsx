@@ -1,9 +1,10 @@
 /* eslint-disable max-len */
-import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React from 'react';
+import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 import { useFormik } from 'formik';
 import {
-  Button, Form, FormControl, FormGroup, Row, Col, Container, Dropdown, ButtonGroup, DropdownButton,
+  Button, Form, FormControl, FormGroup,
 } from 'react-bootstrap';
 import { actions, asyncActions } from '../../slices/index';
 
@@ -40,12 +41,7 @@ const Body = ({
       dispatch(
         asyncActions.updateTaskName(values, listId, id, authToken),
       );
-      dispatch(
-        actions.showEditNameTaskFrom({
-          taskId: id,
-          showFrom: !showEditNameTaskForm,
-        }),
-      );
+      dispatch(actions.showEditNameTaskFrom({ taskId: id, showFrom: !showEditNameTaskForm }));
       resetForm();
     } catch (e) {
       console.log(e);
@@ -66,7 +62,6 @@ const Body = ({
                     <FormControl
                         name="name"
                         type="text"
-                        // placeholder={name}
                         onChange={f.handleChange}
                         onBlur={f.handleBlur}
                         value={f.values.name}
@@ -144,6 +139,14 @@ const Body = ({
           />
       </>
   );
+};
+
+Body.propTypes = {
+  task: PropTypes.object.isRequired,
+  listId: PropTypes.number.isRequired,
+  authToken: PropTypes.string.isRequired,
+  dispatch: PropTypes.func.isRequired,
+  showDeleteModal: PropTypes.bool.isRequired,
 };
 
 export default Body;

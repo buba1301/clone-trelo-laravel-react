@@ -11,7 +11,16 @@ import ModalAddNewUserOnBoard from './ModalAddNewUserOnBoard.jsx';
 import BoardMain from './BoardMain.jsx';
 import echo from '../bootstrap';
 
+const renderMembers = (members) => (
+    <>
+      {members.map(({ email, id }) => (
+        <ReactGravatar email={email} key={id}/>
+      ))}
+    </>
+);
+
 const BoardShowView = () => {
+  const currentUserId = useSelector((state) => state.session.currentUser.id);
   const board = useSelector(({ currentBoard }) => currentBoard.board);
   const members = useSelector(({ currentBoard }) => currentBoard.members);
   const showModal = useSelector(({ currentBoard }) => currentBoard.showAddNewUserModal);
@@ -29,39 +38,29 @@ const BoardShowView = () => {
 
   useEffect(() => {
     dispatch(asyncActions.connectToChannel(channel, authToken));
-  }, [board]);
+  }, [currentUserId, board, members]);
 
   const handleModal = () => {
     dispatch(actions.showAddNewUserModal(!showModal));
   };
 
-  const handleSubmit = async ({ email }, { resetForm }) => {
-    const data = { email, board_id: id };
+  const handleSubmit = async (values, { resetForm }) => {
     try {
-      await dispatch(asyncActions.addUserOnBoard(data, authToken, channel));
+      await dispatch(asyncActions.addUserOnBoard(values, authToken, id));
       dispatch(actions.showAddNewUserModal(!showModal));
       resetForm();
     } catch (e) {
       console.log(e.response.data);
       const errors = e.response.data;
       dispatch(actions.addErrors({ errors }));
-      // return;
     }
   };
 
-  const renderMembers = () => (
-          <>
-            {members.map(({ email, id }) => (
-                    <ReactGravatar email={email} key={id}/>
-            ))}
-          </>
-  );
-
   if (!board) {
     return (
-            <Spinner animation="border" role="status">
-                <span className="sr-only">Loading...</span>
-            </Spinner>
+      <Spinner animation="border" role="status">
+        <span className="sr-only">Loading...</span>
+      </Spinner>
     );
   }
 
@@ -72,7 +71,7 @@ const BoardShowView = () => {
                   <Nav className="mr-auto">
                       <h3>{board.name}</h3>
                   </Nav>
-                  {renderMembers()}
+                  {renderMembers(members)}
                   <Button variant="outline-dark" onClick={handleModal}>
                       +
                   </Button>

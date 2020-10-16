@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
@@ -54,11 +53,11 @@ const BoardCard = ({
   );
 };
 
-BoardCard.proptypes = {
+BoardCard.propTypes = {
   dispatch: PropTypes.func.isRequired,
   name: PropTypes.string.isRequired,
-  key: PropTypes.number,
-  token: PropTypes.string,
+  id: PropTypes.number.isRequired,
+  token: PropTypes.string.isRequired,
 };
 
 export default BoardCard;

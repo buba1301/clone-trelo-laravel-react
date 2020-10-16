@@ -24,4 +24,11 @@ const ModalDelete = ({
     </Modal>
 );
 
+ModalDelete.propTypes = {
+  showDeleteModal: PropTypes.bool.isRequired,
+  handleClose: PropTypes.func.isRequired,
+  handleDelete: PropTypes.func.isRequired,
+  type: PropTypes.string.isRequired,
+};
+
 export default ModalDelete;

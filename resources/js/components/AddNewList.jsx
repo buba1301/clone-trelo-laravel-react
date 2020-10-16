@@ -1,20 +1,16 @@
-import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { useFormik } from 'formik';
 import {
-  Button, Form, FormControl, FormGroup, Card,
+  Button, Form, FormControl, FormGroup,
 } from 'react-bootstrap';
 
 import { actions, asyncActions } from '../slices/index';
-import routes from '../routes';
 
 const AddNewList = ({
   dispatch, showAddNewListForm, boardId, authToken,
 }) => {
   const handleOpenForm = () => dispatch(actions.showAddNewListForm(!showAddNewListForm));
-
-  const url = routes.boardsListsPath(boardId);
-  console.log(url);
 
   const handleSubmit = (values, { resetForm }) => {
     try {
@@ -78,6 +74,13 @@ const AddNewList = ({
           </div>
       </div>
   );
+};
+
+AddNewList.propTypes = {
+  dispatch: PropTypes.func.isRequired,
+  showAddNewListForm: PropTypes.bool.isRequired,
+  boardId: PropTypes.string.isRequired,
+  authToken: PropTypes.string.isRequired,
 };
 
 export default AddNewList;

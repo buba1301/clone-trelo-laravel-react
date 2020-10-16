@@ -2,18 +2,22 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Nav, Navbar, Button } from 'react-bootstrap';
+import {
+  Nav, Navbar, Button,
+} from 'react-bootstrap';
 import ReactGravatar from 'react-gravatar';
-import { asyncActions } from '../slices/index';
+import { actions, asyncActions } from '../slices/index';
 
 const Header = ({ user, dispatch, history }) => {
   const { first_name, last_name, email } = user;
 
   const fullName = [first_name, last_name].join(' ');
 
-  const handleSignOutClick = async () => {
+  const handleSignOutClick = () => {
     try {
       dispatch(asyncActions.signOut());
+      dispatch(actions.signOutBoard({}));
+      dispatch(actions.signOutCurrentBoard());
       history.push('/sign_in');
     } catch (e) {
       console.log(e.response);
@@ -21,7 +25,7 @@ const Header = ({ user, dispatch, history }) => {
   };
 
   return (
-      <header className="main-header">
+      <header>
           <Navbar bg="dark" variant="dark">
               <Nav className="mr-auto">
                   <Nav.Link href="/">Boards</Nav.Link>
@@ -42,10 +46,10 @@ const Header = ({ user, dispatch, history }) => {
   );
 };
 
-Header.proptypes = {
-  user: PropTypes.object,
-  dispatch: PropTypes.func,
-  histoty: PropTypes.func,
+Header.propTypes = {
+  user: PropTypes.object.isRequired,
+  dispatch: PropTypes.func.isRequired,
+  history: PropTypes.object.isRequired,
 };
 
 export default Header;

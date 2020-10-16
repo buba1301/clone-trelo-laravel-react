@@ -1,15 +1,11 @@
 /* eslint-disable max-len */
-import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import {
-  Button, Form, FormControl, FormGroup, Row, Col, Container, Dropdown, ButtonGroup, DropdownButton,
-} from 'react-bootstrap';
+import React from 'react';
+import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 
 import Header from './Header.jsx';
 import Body from './Body.jsx';
 import Footer from './Footer.jsx';
-
-import { actions, asyncActions } from '../../slices/index';
 
 const ListView = ({
   name,
@@ -71,5 +67,15 @@ const ListView = ({
           </div>
       </div>
   );
+};
+
+ListView.propTypes = {
+  name: PropTypes.string.isRequired,
+  listId: PropTypes.number.isRequired,
+  authToken: PropTypes.string.isRequired,
+  dispatch: PropTypes.func.isRequired,
+  boardId: PropTypes.string.isRequired,
+  fetching: PropTypes.bool.isRequired,
+  showDeleteModal: PropTypes.bool.isRequired,
 };
 export default ListView;

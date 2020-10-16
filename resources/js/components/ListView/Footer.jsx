@@ -1,9 +1,9 @@
 /* eslint-disable max-len */
-import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { useFormik } from 'formik';
 import {
-  Button, Form, FormControl, FormGroup, Row, Col, Container, Dropdown, ButtonGroup, DropdownButton,
+  Button, Form, FormControl, FormGroup,
 } from 'react-bootstrap';
 import { actions, asyncActions } from '../../slices/index';
 
@@ -67,6 +67,13 @@ const Footer = ({
           </Form>
       </div>
   );
+};
+
+Footer.propTypes = {
+  dispatch: PropTypes.func.isRequired,
+  listId: PropTypes.number.isRequired,
+  showAddNewTaskFrom: PropTypes.bool.isRequired,
+  authToken: PropTypes.string.isRequired,
 };
 
 export default Footer;

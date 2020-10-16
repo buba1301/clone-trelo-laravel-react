@@ -1,16 +1,11 @@
 /* eslint-disable max-len */
-import React, { useEffect } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
-import { useParams } from 'react-router-dom';
 import { isEmpty } from 'lodash';
-import { Container, Row } from 'react-bootstrap';
-import ReactGravatar from 'react-gravatar';
-import { actions, asyncActions } from '../slices/index';
 
 import AddNewList from './AddNewList.jsx';
 import ListView from './ListView/ListView.jsx';
-
-import echo from '../bootstrap';
 
 const BoardMain = ({ boardId, authToken, history }) => {
   const showAddNewListFrom = useSelector(({ currentBoard }) => currentBoard.showAddNewListForm);
@@ -47,6 +42,12 @@ const BoardMain = ({ boardId, authToken, history }) => {
           </div>
       </div>
   );
+};
+
+BoardMain.propTypes = {
+  boardId: PropTypes.string.isRequired,
+  authToken: PropTypes.string.isRequired,
+  history: PropTypes.object.isRequired,
 };
 
 export default BoardMain;

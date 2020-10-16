@@ -28,8 +28,6 @@ const SessionNew = () => {
   const { signIn } = asyncActions;
   const { loginErrors } = actions;
 
-  // eslint-disable-next-line max-len
-
   useEffect(() => {
     setDocumentTitle('SignIn');
   }, [errors]);
@@ -39,7 +37,7 @@ const SessionNew = () => {
     dispatch(actions.loginErrors(errorsUpdate));
   };
 
-  const handleSubmit = async (values, { resetForm, setStatus }) => {
+  const handleSubmit = async (values, { resetForm }) => {
     try {
       await dispatch(signIn(values));
       dispatch(actions.setFetchihg(false));

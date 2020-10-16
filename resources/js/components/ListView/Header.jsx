@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { useFormik } from 'formik';
 import {
   Button, Form, FormControl, FormGroup, Spinner,
@@ -7,6 +7,28 @@ import {
 import { actions, asyncActions } from '../../slices/index';
 
 import ModalDelete from '../ModalDelete.jsx';
+
+const renderSubmitButton = (fetching, f) => {
+  if (fetching) {
+    return (
+          <Button variant="primary" block disabled>
+              <Spinner
+                  as="span"
+                  animation="grow"
+                  size="sm"
+                  role="status"
+                  aria-hidden="true"
+              />
+              Loading...
+          </Button>
+    );
+  }
+  return (
+        <Button variant="dark" type="submit" disabled={f.errors.name}>
+            Edit name
+        </Button>
+  );
+};
 
 const Header = ({
   dispatch,
@@ -55,28 +77,6 @@ const Header = ({
     onSubmit: handleSubmit,
   });
 
-  const renderSubmitButton = () => {
-    if (fetching) {
-      return (
-          <Button variant="primary" block disabled>
-              <Spinner
-                  as="span"
-                  animation="grow"
-                  size="sm"
-                  role="status"
-                  aria-hidden="true"
-              />
-              Loading...
-          </Button>
-      );
-    }
-    return (
-        <Button variant="dark" type="submit" disabled={f.errors.name}>
-            Edit name
-        </Button>
-    );
-  };
-
   if (showEditNameListForm) {
     return (
         <Form onSubmit={f.handleSubmit}>
@@ -96,7 +96,7 @@ const Header = ({
                     {f.errors.name ? f.errors.name : null}
                 </Form.Control.Feedback>
             </FormGroup>
-            {renderSubmitButton()}
+            {renderSubmitButton(fetching, f)}
             or
             <Button variant="link" onClick={handleOpenEdit}>
                 Cancel
@@ -145,6 +145,17 @@ const Header = ({
           />
       </div>
   );
+};
+
+Header.propTypes = {
+  dispatch: PropTypes.func.isRequired,
+  name: PropTypes.string.isRequired,
+  listId: PropTypes.number.isRequired,
+  boardId: PropTypes.string.isRequired,
+  authToken: PropTypes.string.isRequired,
+  showEditNameListForm: PropTypes.bool.isRequired,
+  showDeleteModal: PropTypes.bool.isRequired,
+  fetching: PropTypes.bool.isRequired,
 };
 
 export default Header;

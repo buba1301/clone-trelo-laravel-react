@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useFormik } from 'formik';
@@ -62,12 +61,10 @@ const BoardsForm = ({
   );
 };
 
-BoardsForm.prototypes = {
-  dispatch: PropTypes.func,
-  errors: PropTypes.object,
-  showForm: PropTypes.bool,
-  onClick: PropTypes.func,
-  createBoard: PropTypes.func,
+BoardsForm.propTypes = {
+  dispatch: PropTypes.func.isRequired,
+  onClick: PropTypes.func.isRequired,
+  token: PropTypes.string.isRequired,
 };
 
 export default BoardsForm;

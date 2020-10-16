@@ -1,16 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useSelector, useDispatch } from 'react-redux';
 import { useFormik } from 'formik';
 
 import {
   Button, Modal, Form, FormGroup, FormControl,
 } from 'react-bootstrap';
 
-import { actions, asyncActions } from '../slices/index';
+import { actions } from '../slices/index';
 
 const ModalAddNewUserOnBoard = ({
-  dispatch, showModal, handleSubmit, channel, members, errorsForm,
+  dispatch, showModal, handleSubmit, errorsForm,
 }) => {
   const validate = (values) => {
     // let errors = errorsForm;
@@ -70,6 +69,13 @@ const ModalAddNewUserOnBoard = ({
           </Modal.Body>
       </Modal>
   );
+};
+
+ModalAddNewUserOnBoard.propTypes = {
+  dispatch: PropTypes.func.isRequired,
+  showModal: PropTypes.bool.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
+  errorsForm: PropTypes.object.isRequired,
 };
 
 export default ModalAddNewUserOnBoard;
