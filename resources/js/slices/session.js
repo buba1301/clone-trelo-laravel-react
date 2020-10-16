@@ -50,7 +50,7 @@ const getCurrentUser = (authToken) => async (dispatch) => {
   dispatch(sessionActions.addCurrentUser(user));
 };
 
-const signOut = () => async (dispatch) => {
+const signOut = () => (dispatch) => {
   localStorage.removeItem('laravelToken');
 
   dispatch(sessionActions.userSignOut());
