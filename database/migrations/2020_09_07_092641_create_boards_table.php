@@ -17,7 +17,7 @@ class CreateBoardsTable extends Migration
             $table->id();
             $table->string('name');
             $table->bigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }
