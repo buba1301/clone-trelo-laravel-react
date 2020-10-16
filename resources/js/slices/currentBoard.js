@@ -109,6 +109,9 @@ const slice = createSlice({
     },
     addErrors: (state, { payload: { errors } }) => ({ ...state, errors }),
     setFetching: (state, { payload }) => ({ ...state, fetching: payload }),
+    signOutCurrentBoard: (state, { payload }) => ({
+      ...state, board: {}, members: [], lists: [], tasks: [], listsUIState: {}, tasksUIState: {}, membersUIState: {},
+    }),
   },
 });
 
@@ -150,8 +153,8 @@ const connectToChannel = (channel) => async (dispatch) => {
     });
 };
 
-const addUserOnBoard = (data, authToken, channel) => async (dispatch) => {
-  const url = routes.addUserOnBoardPath();
+const addUserOnBoard = (data, authToken, boardId) => async (dispatch) => {
+  const url = routes.addUserOnBoardPath(boardId);
 
   try {
     const res = await axios.post(url, data, {
@@ -163,9 +166,7 @@ const addUserOnBoard = (data, authToken, channel) => async (dispatch) => {
     const { members } = res.data;
     dispatch(currentBoardActions.addMembers({ members }));
   } catch (e) {
-    const errors = e.response.data;
     throw (e);
-    // dispatch(currentBoardActions.addErrors({ errors }));
   }
 };
 
@@ -230,7 +231,7 @@ const getCurrentTasks = (listId, authToken) => async (dispatch) => {
     });
 
     const { tasks } = res.data;
-    console.log(tasks);
+
     dispatch(currentBoardActions.addNewTasks({ tasks }));
   } catch (e) {
     throw (e);
