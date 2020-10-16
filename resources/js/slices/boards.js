@@ -16,10 +16,13 @@ const slice = createSlice({
     addBoard: (state, { payload }) => ({ ...state, boards: [...state.boards, payload] }),
     setShowForm: (state, { payload }) => ({ ...state, showForm: payload }),
     boardsErrors: (state, { payload }) => ({ ...state, errors: payload }),
+
     deleteBoard: (state, { payload: { currentBoardId } }) => {
       const filterBoards = state.boards.filter(({ id }) => id !== currentBoardId);
       return { ...state, boards: filterBoards };
     },
+    signOutBoard: (state, { payload }) => ({ ...state, boards: [] }),
+
     showDeleteModal: (state, { payload }) => ({ ...state, showDeleteModal: payload }),
   },
 });
