@@ -5,6 +5,7 @@ import {
   Button, Form, FormControl, FormGroup, Spinner,
 } from 'react-bootstrap';
 import { actions, asyncActions } from '../../slices/index';
+import modalDeleteConfig from '../../config/modalDeleteType';
 
 import ModalDelete from '../ModalDelete.jsx';
 
@@ -40,6 +41,8 @@ const Header = ({
   boardId,
   fetching,
 }) => {
+  const modalDeleteType = modalDeleteConfig.list;
+
   const handleOpenEdit = () => {
     dispatch(actions.showEditNameListForm({
       listId,
@@ -141,7 +144,7 @@ const Header = ({
               showDeleteModal={showDeleteModal}
               handleClose={handleCloseDelete}
               handleDelete={handleDeleteList}
-              type={'lists'}
+              type={modalDeleteType}
           />
       </div>
   );

@@ -7,6 +7,7 @@ import {
   Button, Form, FormControl, FormGroup,
 } from 'react-bootstrap';
 import { actions, asyncActions } from '../../slices/index';
+import modalDeleteConfig from '../../config/modalDeleteType';
 
 import ModalDelete from '../ModalDelete.jsx';
 
@@ -14,6 +15,8 @@ const Body = ({
   task, listId, dispatch, authToken, showDeleteModal,
 }) => {
   const { id, name } = task;
+
+  const modalDeleteType = modalDeleteConfig.list;
 
   const showEditNameTaskForm = useSelector(
     ({ currentBoard }) => currentBoard.tasksUIState.byId[id].showEditNameTaskForm,
@@ -135,7 +138,7 @@ const Body = ({
               showDeleteModal={showDeleteModal}
               handleClose={handleCloseDelete}
               handleDelete={handleDelete}
-              type={'task'}
+              type={modalDeleteType}
           />
       </>
   );

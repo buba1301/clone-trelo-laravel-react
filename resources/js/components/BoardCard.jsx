@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { Card, Button } from 'react-bootstrap';
+import modalDeleteConfig from '../config/modalDeleteType';
 
 import { actions, asyncActions } from '../slices/index';
 
@@ -12,6 +13,8 @@ const BoardCard = ({
   dispatch, name, id, token,
 }) => {
   const showDeleteModal = useSelector((state) => state.boards.showDeleteModal);
+
+  const modalDeleteType = modalDeleteConfig.board;
 
   const history = useHistory();
 
@@ -47,7 +50,7 @@ const BoardCard = ({
               showDeleteModal={showDeleteModal}
               handleClose={handleClose}
               handleDelete={handleDeleteBoard}
-              type={'board'}
+              type={modalDeleteType}
           />
       </>
   );
