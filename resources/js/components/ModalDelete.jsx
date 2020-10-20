@@ -4,9 +4,13 @@ import PropTypes from 'prop-types';
 import { Button, Modal } from 'react-bootstrap';
 
 const ModalDelete = ({
-  showDeleteModal, handleClose, handleDelete, type,
+  showDeleteModal,
+  handleDelete,
+  handleClose,
+  type,
 }) => (
     <Modal show={showDeleteModal} onHide={handleClose}>
+      <div className="modal-container">
         <Modal.Header closeButton>
             <Modal.Title>Delete board</Modal.Title>
         </Modal.Header>
@@ -14,13 +18,14 @@ const ModalDelete = ({
             Are you sure you want to delete this {type}?
         </Modal.Body>
         <Modal.Footer>
-            <Button variant="secondary" onClick={handleClose}>
+            <Button variant="secondary" id="close" onClick={handleClose}>
                 Close
             </Button>
-            <Button variant="danger" onClick={handleDelete}>
+            <Button variant="danger" id='delete' onClick={handleDelete}>
                 Delete
             </Button>
         </Modal.Footer>
+      </div>
     </Modal>
 );
 
