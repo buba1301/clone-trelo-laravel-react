@@ -8,3 +8,6 @@ watch:
 
 echo:
 	laravel-echo-server start
+
+test:
+	npm run test
