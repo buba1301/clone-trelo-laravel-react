@@ -6,6 +6,7 @@ import {
 import {
   boards, boardsActions, boardsFetching, createBoard, fetchDeleteBoard,
 } from './boards';
+import { deleteModal, modalActions } from './modalDelete';
 import {
   currentBoardActions,
   currentBoard,
@@ -26,6 +27,7 @@ const actions = {
   ...sessionActions,
   ...boardsActions,
   ...currentBoardActions,
+  ...modalActions,
 };
 
 const asyncActions = {
@@ -58,4 +60,5 @@ export const createRootReducer = () => combineReducers({
   session,
   boards,
   currentBoard,
+  deleteModal,
 });

@@ -73,3 +73,5 @@ const fetchDeleteBoard = (currentBoardId, authToken) => async (dispatch) => {
 export {
   boardsActions, boards, boardsFetching, createBoard, fetchDeleteBoard,
 };
+
+console.log(slice);
