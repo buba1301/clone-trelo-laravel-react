@@ -4,10 +4,29 @@ import { useFormik } from 'formik';
 import {
   Button, Form, FormControl, FormGroup, Spinner,
 } from 'react-bootstrap';
+import {
+  Menu,
+  Popover,
+  IconButton,
+  MoreIcon,
+  Position,
+} from 'evergreen-ui';
 import { actions, asyncActions } from '../../slices/index';
 import modalDeleteConfig from '../../config/modalDeleteType';
 
 import ModalDelete from '../ModalDelete.jsx';
+
+const renderRowMenu = (handleOpenEdit, handleOpenDelete) => (
+    <Menu>
+        <Menu.Group>
+            <Menu.Item onClick={handleOpenEdit}>Edit...</Menu.Item>
+        </Menu.Group>
+        <Menu.Divider />
+        <Menu.Group>
+            <Menu.Item intent='danger' onClick={handleOpenDelete}>Delete</Menu.Item>
+        </Menu.Group>
+    </Menu>
+);
 
 const renderSubmitButton = (fetching, f) => {
   if (fetching) {
@@ -111,35 +130,12 @@ const Header = ({
   return (
       <div className="navbar navbar-light bg-light">
           <div>{name}</div>
-          <ul className="nav nav-pills">
-              <li className="nav-item dropdown">
-                  <a
-                      className="nav-link dropdown-toggle"
-                      data-toggle="dropdown"
-                      href="#"
-                      role="button"
-                      aria-haspopup="true"
-                      aria-expanded="false"
-                  ></a>
-                  <div className="dropdown-menu">
-                      <button
-                          className="btn btn-link dropdown-item"
-                          href="#"
-                          onClick={handleOpenEdit}
-                      >
-                          Edit list
-                      </button>
-                      <div role="separator" className="dropdown-divider"></div>
-                      <a
-                          className="dropdown-item"
-                          href="#three"
-                          onClick={handleOpenDelete}
-                      >
-                          Delete list
-                      </a>
-                  </div>
-              </li>
-          </ul>
+          <Popover
+                    content={renderRowMenu(handleOpenEdit, handleOpenDelete)}
+                    position={Position.BOTTOM_RIGHT}
+                >
+                    <IconButton icon={MoreIcon} height={24} appearance="minimal" />
+          </Popover>
           <ModalDelete
               showDeleteModal={showDeleteModal}
               handleClose={handleCloseDelete}
@@ -162,3 +158,33 @@ Header.propTypes = {
 };
 
 export default Header;
+
+/* <ul className="nav nav-pills">
+              <li className="nav-item dropdown">
+                  <a
+                      className="nav-link dropdown-toggle"
+                      data-toggle="dropdown"
+                      href="#"
+                      role="button"
+                      aria-haspopup="true"
+                      aria-expanded="false"
+                  ></a>
+                  <div className="dropdown-menu">
+                      <button
+                          className="btn btn-link dropdown-item"
+                          href="#"
+                          onClick={handleOpenEdit}
+                      >
+                          Edit list
+                      </button>
+                      <div role="separator" className="dropdown-divider"></div>
+                      <a
+                          className="dropdown-item"
+                          href="#"
+                          onClick={handleOpenDelete}
+                      >
+                          Delete list
+                      </a>
+                  </div>
+              </li>
+          </ul> */
