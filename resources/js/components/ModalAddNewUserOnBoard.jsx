@@ -58,12 +58,16 @@ const ModalAddNewUserOnBoard = ({
                           {errorsForm.email ? errorsForm.email : null}
                       </Form.Control.Feedback>
                   </FormGroup>
-                  <Button variant="primary" type="submit" disabled={errorsForm.email ? true : null}>
-                      Add user
+                  <Button
+                    variant="primary"
+                    type="submit"
+                    disabled={errorsForm.email ? true : null}
+                  >{' '}
+                    Add user
                   </Button>
-                  or
+
                   <Button variant="link" onClick={handleModal}>
-                      Cancel
+                    Cancel
                   </Button>
               </Form>
           </Modal.Body>

@@ -3,8 +3,9 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import {
-  Container, Row, Col, Button, Spinner,
+  Container, Row, Col, Button,
 } from 'react-bootstrap';
+import { Pane, Spinner } from 'evergreen-ui';
 
 import BoardCard from './BoardCard.jsx';
 import BoardForm from './BoardForm.jsx';
@@ -74,9 +75,14 @@ const Main = () => {
 
   if (fetching) {
     return (
-        <Spinner animation="border" role="status">
-            <span className="sr-only">Loading...</span>
-        </Spinner>
+        <Pane
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          height={400}
+        >
+            <Spinner />
+        </Pane>
     );
   }
 

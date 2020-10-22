@@ -16,14 +16,11 @@ import {
   Menu,
 } from 'evergreen-ui';
 import { actions, asyncActions } from '../../slices/index';
-import modalDeleteConfig from '../../config/modalDeleteType';
 
-import ModalDelete from '../ModalDelete.jsx';
-
-const renderRowMenu = (handleDelete) => (
+const renderRowMenu = (handleDelete, handleOpenCloseForm) => (
         <Menu>
             <Menu.Group>
-                <Menu.Item>Edit...</Menu.Item>
+                <Menu.Item onClick={handleOpenCloseForm}>Edit...</Menu.Item>
             </Menu.Group>
             <Menu.Divider />
             <Menu.Group>
@@ -33,7 +30,7 @@ const renderRowMenu = (handleDelete) => (
 );
 
 const Body = ({
-  task, listId, dispatch, authToken, showDeleteModal,
+  task, listId, dispatch, authToken,
 }) => {
   const { id, name } = task;
 
@@ -52,7 +49,6 @@ const Body = ({
 
   const handleDelete = () => {
     dispatch(asyncActions.fetchDeleteTask(listId, id, authToken));
-    // dispatch(actions.showDeleteModal(!showDeleteModal));
   };
 
   const handleSubmit = (values, { resetForm }) => {
@@ -109,7 +105,7 @@ const Body = ({
             </Table.Cell>
             <Table.Cell width={48} flex="none">
                 <Popover
-                    content={renderRowMenu(handleDelete)}
+                    content={renderRowMenu(handleDelete, handleOpenCloseForm)}
                     position={Position.BOTTOM_RIGHT}
                 >
                     <IconButton icon={MoreIcon} height={24} appearance="minimal" />
@@ -126,7 +122,6 @@ Body.propTypes = {
   listId: PropTypes.number.isRequired,
   authToken: PropTypes.string.isRequired,
   dispatch: PropTypes.func.isRequired,
-  showDeleteModal: PropTypes.bool.isRequired,
 };
 
 export default Body;

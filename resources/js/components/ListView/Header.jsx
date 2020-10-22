@@ -12,18 +12,15 @@ import {
   Position,
 } from 'evergreen-ui';
 import { actions, asyncActions } from '../../slices/index';
-import modalDeleteConfig from '../../config/modalDeleteType';
 
-import ModalDelete from '../ModalDelete.jsx';
-
-const renderRowMenu = (handleOpenEdit, handleOpenDelete) => (
+const renderRowMenu = (handleOpenEdit, handleOpen) => (
     <Menu>
         <Menu.Group>
             <Menu.Item onClick={handleOpenEdit}>Edit...</Menu.Item>
         </Menu.Group>
         <Menu.Divider />
         <Menu.Group>
-            <Menu.Item intent='danger' onClick={handleOpenDelete}>Delete</Menu.Item>
+            <Menu.Item intent='danger' onClick={handleOpen}>Delete</Menu.Item>
         </Menu.Group>
     </Menu>
 );
@@ -56,30 +53,16 @@ const Header = ({
   listId,
   authToken,
   showEditNameListForm,
-  showDeleteModal,
+  handleOpen,
   boardId,
   fetching,
 }) => {
-  const modalDeleteType = modalDeleteConfig.list;
-
   const handleOpenEdit = () => {
     dispatch(actions.showEditNameListForm({
       listId,
       showForm: !showEditNameListForm,
     }));
   };
-
-  const handleCloseDelete = () => dispatch(actions.showDeleteModal(!showDeleteModal));
-  const handleOpenDelete = () => dispatch(actions.showDeleteModal(!showDeleteModal));
-
-  const handleDeleteList = () => {
-    try {
-      dispatch(asyncActions.fetchDeleteList(boardId, listId, authToken));
-      dispatch(actions.showDeleteModal(!showDeleteModal));
-    } catch (e) {
-      console.log(e.response);
-    }
-  }; // clear func or not?
 
   const handleSubmit = (values, { resetForm }) => {
     try {
@@ -131,17 +114,11 @@ const Header = ({
       <div className="navbar navbar-light bg-light">
           <div>{name}</div>
           <Popover
-                    content={renderRowMenu(handleOpenEdit, handleOpenDelete)}
-                    position={Position.BOTTOM_RIGHT}
-                >
-                    <IconButton icon={MoreIcon} height={24} appearance="minimal" />
+            content={renderRowMenu(handleOpenEdit, handleOpen)}
+            position={Position.BOTTOM_RIGHT}
+          >
+            <IconButton icon={MoreIcon} height={24} appearance="minimal" />
           </Popover>
-          <ModalDelete
-              showDeleteModal={showDeleteModal}
-              handleClose={handleCloseDelete}
-              handleDelete={handleDeleteList}
-              type={modalDeleteType}
-          />
       </div>
   );
 };
@@ -153,7 +130,7 @@ Header.propTypes = {
   boardId: PropTypes.string.isRequired,
   authToken: PropTypes.string.isRequired,
   showEditNameListForm: PropTypes.bool.isRequired,
-  showDeleteModal: PropTypes.bool.isRequired,
+  handleOpen: PropTypes.func.isRequired,
   fetching: PropTypes.bool.isRequired,
 };
 

@@ -3,9 +3,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { Table } from 'evergreen-ui';
+
+import ModalDelete from '../ModalDelete.jsx';
 import Header from './Header.jsx';
 import Body from './Body.jsx';
 import Footer from './Footer.jsx';
+
+import { actions, asyncActions } from '../../slices/index';
+import modalDeleteConfig from '../../config/modalDeleteType';
 
 const ListView = ({
   name,
@@ -14,15 +19,35 @@ const ListView = ({
   dispatch,
   boardId,
   fetching,
-  showDeleteModal,
 }) => {
   const showAddNewTaskFrom = useSelector(({ currentBoard }) => currentBoard.listsUIState.byId[listId].showAddNewTaskFrom);
 
   const showEditNameListForm = useSelector(({ currentBoard }) => currentBoard.listsUIState.byId[listId].showEditNameListForm);
 
+  const showDeleteModal = useSelector(({ deleteModal }) => deleteModal.showModal);
+  const deleteId = useSelector(({ deleteModal }) => deleteModal.id);
+  const deleteType = useSelector(({ deleteModal }) => deleteModal.type);
+
   // eslint-disable-next-line camelcase
   const tasks = useSelector(({ currentBoard }) => currentBoard.tasks.filter(({ list_id }) => list_id === listId));
-  console.log(tasks);
+
+  const modalDeleteType = modalDeleteConfig.list;
+
+  const handleCloseDeleteModal = () => dispatch(actions.hideDeleteModal());
+  const handleOpenDeleteModal = () => dispatch(actions.showDeleteModal({
+    type: modalDeleteType,
+    id: listId,
+    showModal: true,
+  }));
+
+  const handleDeleteList = async () => {
+    try {
+      await dispatch(asyncActions.fetchDeleteList(boardId, deleteId, authToken));
+      dispatch(actions.hideDeleteModal());
+    } catch (error) {
+      console.log(error.response);
+    }
+  }; // clear func or not?
 
   return (
       <div className="col-lg-3 col-sm-12 col-md-6">
@@ -35,7 +60,7 @@ const ListView = ({
                       boardId={boardId}
                       authToken={authToken}
                       showEditNameListForm={showEditNameListForm}
-                      showDeleteModal={showDeleteModal}
+                      handleOpen={handleOpenDeleteModal}
                       fetching={fetching}
                   />
               </div>
@@ -43,19 +68,19 @@ const ListView = ({
               <div className="card-body">
                     {tasks.length !== 0
                       ? <Table>
-                        <Table.Body height={200}>
-                          {tasks.map((task) => (
-                          <Body
-                            key={task.id}
-                            task={task}
-                            listId={listId}
-                            dispatch={dispatch}
-                            authToken={authToken}
-                            showDeleteModal={showDeleteModal}
-                          />
-                          ))}
-                        </Table.Body>
-                      </Table>
+                          <Table.Body height={200} >
+                            {tasks.map((task) => (
+
+                            <Body
+                              key={task.id}
+                              task={task}
+                              listId={listId}
+                              dispatch={dispatch}
+                              authToken={authToken}
+                            />
+                            ))}
+                          </Table.Body>
+                        </Table>
                       : null
                     }
               </div>
@@ -68,6 +93,12 @@ const ListView = ({
                   />
               </div>
           </div>
+          <ModalDelete
+              showDelete={showDeleteModal}
+              handleClose={handleCloseDeleteModal}
+              handleDelete={handleDeleteList}
+              type={deleteType}
+          />
       </div>
   );
 };
@@ -79,6 +110,5 @@ ListView.propTypes = {
   dispatch: PropTypes.func.isRequired,
   boardId: PropTypes.string.isRequired,
   fetching: PropTypes.bool.isRequired,
-  showDeleteModal: PropTypes.bool.isRequired,
 };
 export default ListView;

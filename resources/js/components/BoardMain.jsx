@@ -9,7 +9,6 @@ import ListView from './ListView/ListView.jsx';
 
 const BoardMain = ({ boardId, authToken, history }) => {
   const showAddNewListFrom = useSelector(({ currentBoard }) => currentBoard.showAddNewListForm);
-  const showDeleteModal = useSelector(({ boards }) => boards.showDeleteModal);
   const lists = useSelector(({ currentBoard }) => currentBoard.lists);
   const fetching = useSelector(({ currentBoard }) => currentBoard.fetching);
 
@@ -28,7 +27,6 @@ const BoardMain = ({ boardId, authToken, history }) => {
                             dispatch={dispatch}
                             boardId={boardId}
                             fetching={fetching}
-                            showDeleteModal={showDeleteModal}
                         />
                 ))
                 : null}

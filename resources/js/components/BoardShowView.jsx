@@ -4,18 +4,31 @@ import { useParams, useHistory } from 'react-router-dom';
 import {
   Container, Spinner, Navbar, Nav, Button,
 } from 'react-bootstrap';
-import ReactGravatar from 'react-gravatar';
+import { Avatar, IconButton, PlusIcon } from 'evergreen-ui';
 import { actions, asyncActions } from '../slices/index';
 
 import ModalAddNewUserOnBoard from './ModalAddNewUserOnBoard.jsx';
 import BoardMain from './BoardMain.jsx';
 import echo from '../bootstrap';
 
-const renderMembers = (members) => (
+const renderMembers = (members, board) => (
     <>
-      {members.map(({ email, id }) => (
-        <ReactGravatar email={email} key={id}/>
-      ))}
+      {members.map(({
+        first_name, last_name, email, id,
+      }) => {
+        const fullName = [first_name, last_name].join(' ');
+
+        const color = (id === board.user_id ? 'green' : 'red');
+        return (
+          <Avatar
+            key={id}
+            isSolid={id === board.user_id}
+            color={color}
+            name={fullName}
+            size={30}
+            marginRight={8} />
+        );
+      })}
     </>
 );
 
@@ -71,13 +84,18 @@ const BoardShowView = () => {
                   <Nav className="mr-auto">
                       <h3>{board.name}</h3>
                   </Nav>
-                  {renderMembers(members)}
-                  <Button variant="outline-dark" onClick={handleModal}>
-                      +
-                  </Button>
+                  {renderMembers(members, board)}
+                  <IconButton
+                    icon={PlusIcon}
+                    onClick={handleModal}
+                  />
               </Navbar>
           </Container>
-          <BoardMain boardId={id} authToken={authToken} history={history} />
+          <BoardMain
+            boardId={id}
+            authToken={authToken}
+            history={history}
+          />
           <ModalAddNewUserOnBoard
               dispatch={dispatch}
               showModal={showModal}

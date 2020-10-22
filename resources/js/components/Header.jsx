@@ -5,7 +5,9 @@ import PropTypes from 'prop-types';
 import {
   Nav, Navbar,
 } from 'react-bootstrap';
-import { Avatar, Button, ArrowLeftIcon } from 'evergreen-ui';
+import {
+  Avatar, Button, ArrowLeftIcon, IconButton, HomeIcon,
+} from 'evergreen-ui';
 import { actions, asyncActions } from '../slices/index';
 
 const Header = ({ user, dispatch, history }) => {
@@ -28,7 +30,7 @@ const Header = ({ user, dispatch, history }) => {
       <header>
           <Navbar bg="dark" variant="dark">
               <Nav className="mr-auto">
-                  <Nav.Link href="/">Boards</Nav.Link>
+                  <IconButton icon={HomeIcon} height={40} is="a" href="/" />
               </Nav>
               <Nav.Item as="li">
                   <Nav.Link href="/">
