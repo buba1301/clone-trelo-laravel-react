@@ -3,13 +3,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  Nav, Navbar, Button,
+  Nav, Navbar,
 } from 'react-bootstrap';
-import ReactGravatar from 'react-gravatar';
+import { Avatar, Button, ArrowLeftIcon } from 'evergreen-ui';
 import { actions, asyncActions } from '../slices/index';
 
 const Header = ({ user, dispatch, history }) => {
-  const { first_name, last_name, email } = user;
+  const { first_name, last_name } = user;
 
   const fullName = [first_name, last_name].join(' ');
 
@@ -36,10 +36,16 @@ const Header = ({ user, dispatch, history }) => {
                   </Nav.Link>
               </Nav.Item>
               <Navbar.Brand href="/">
-                  <ReactGravatar email={email} /> {fullName}
+                  <Avatar isSolid name={fullName} size={40} />
               </Navbar.Brand>
-              <Button variant="outline-danger" onClick={handleSignOutClick}>
-                  SignOut
+              <Button
+                marginBottom={8}
+                marginRight={12}
+                iconBefore={ArrowLeftIcon}
+                intent="danger"
+                onClick={handleSignOutClick}
+              >
+                SignOut
               </Button>
           </Navbar>
       </header>

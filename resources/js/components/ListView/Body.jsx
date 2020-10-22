@@ -6,6 +6,14 @@ import { useFormik } from 'formik';
 import {
   Button, Form, FormControl, FormGroup,
 } from 'react-bootstrap';
+import {
+  Table,
+  Radio,
+  Popover,
+  Position,
+  IconButton,
+  MoreIcon,
+} from 'evergreen-ui';
 import { actions, asyncActions } from '../../slices/index';
 import modalDeleteConfig from '../../config/modalDeleteType';
 
@@ -87,7 +95,41 @@ const Body = ({
 
   return (
       <>
-          <li className="list-group-item">
+            <Table.VirtualBody height={200}>
+                <Radio checked size={16} name={name} label="Radio default" />
+                <Table.Cell width={48} flex="none">
+                    <Popover
+                      // content={this.renderRowMenu}
+                      position={Position.BOTTOM_RIGHT}
+                    >
+                        <IconButton icon={MoreIcon} height={24} appearance="minimal" />
+                    </Popover>
+                </Table.Cell>
+            </Table.VirtualBody>
+        <ModalDelete
+            showDeleteModal={showDeleteModal}
+            handleClose={handleCloseDelete}
+            handleDelete={handleDelete}
+            type={modalDeleteType}
+        />
+      </>
+  );
+};
+
+Body.propTypes = {
+  task: PropTypes.object.isRequired,
+  listId: PropTypes.number.isRequired,
+  authToken: PropTypes.string.isRequired,
+  dispatch: PropTypes.func.isRequired,
+  showDeleteModal: PropTypes.bool.isRequired,
+};
+
+export default Body;
+
+// {f.errors.name ? f.errors.name : null}
+// disabled={f.errors.name}
+
+/* <li className="list-group-item">
               <div className="form-check form-check-inline">
                   <input
                       className="form-check-input position-static"
@@ -133,26 +175,4 @@ const Body = ({
                       </div>
                   </div>
               </div>
-          </li>
-          <ModalDelete
-              showDeleteModal={showDeleteModal}
-              handleClose={handleCloseDelete}
-              handleDelete={handleDelete}
-              type={modalDeleteType}
-          />
-      </>
-  );
-};
-
-Body.propTypes = {
-  task: PropTypes.object.isRequired,
-  listId: PropTypes.number.isRequired,
-  authToken: PropTypes.string.isRequired,
-  dispatch: PropTypes.func.isRequired,
-  showDeleteModal: PropTypes.bool.isRequired,
-};
-
-export default Body;
-
-// {f.errors.name ? f.errors.name : null}
-// disabled={f.errors.name}
+          </li> */
