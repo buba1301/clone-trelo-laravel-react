@@ -8,23 +8,34 @@ import {
 } from 'react-bootstrap';
 import {
   Table,
-  Radio,
+  Checkbox,
   Popover,
   Position,
   IconButton,
   MoreIcon,
+  Menu,
 } from 'evergreen-ui';
 import { actions, asyncActions } from '../../slices/index';
 import modalDeleteConfig from '../../config/modalDeleteType';
 
 import ModalDelete from '../ModalDelete.jsx';
 
+const renderRowMenu = (handleDelete) => (
+        <Menu>
+            <Menu.Group>
+                <Menu.Item>Edit...</Menu.Item>
+            </Menu.Group>
+            <Menu.Divider />
+            <Menu.Group>
+                <Menu.Item intent='danger' onClick={handleDelete}>Delete</Menu.Item>
+            </Menu.Group>
+        </Menu>
+);
+
 const Body = ({
   task, listId, dispatch, authToken, showDeleteModal,
 }) => {
   const { id, name } = task;
-
-  const modalDeleteType = modalDeleteConfig.list;
 
   const showEditNameTaskForm = useSelector(
     ({ currentBoard }) => currentBoard.tasksUIState.byId[id].showEditNameTaskForm,
@@ -39,12 +50,9 @@ const Body = ({
     );
   };
 
-  const handleCloseDelete = () => dispatch(actions.showDeleteModal(!showDeleteModal));
-  const handleOpenDelete = () => dispatch(actions.showDeleteModal(!showDeleteModal));
-
   const handleDelete = () => {
     dispatch(asyncActions.fetchDeleteTask(listId, id, authToken));
-    dispatch(actions.showDeleteModal(!showDeleteModal));
+    // dispatch(actions.showDeleteModal(!showDeleteModal));
   };
 
   const handleSubmit = (values, { resetForm }) => {
@@ -95,23 +103,20 @@ const Body = ({
 
   return (
       <>
-            <Table.VirtualBody height={200}>
-                <Radio checked size={16} name={name} label="Radio default" />
-                <Table.Cell width={48} flex="none">
-                    <Popover
-                      // content={this.renderRowMenu}
-                      position={Position.BOTTOM_RIGHT}
-                    >
-                        <IconButton icon={MoreIcon} height={24} appearance="minimal" />
-                    </Popover>
-                </Table.Cell>
-            </Table.VirtualBody>
-        <ModalDelete
-            showDeleteModal={showDeleteModal}
-            handleClose={handleCloseDelete}
-            handleDelete={handleDelete}
-            type={modalDeleteType}
-        />
+        <Table.Row>
+            <Table.Cell>
+                <Checkbox size={16} label={name} />
+            </Table.Cell>
+            <Table.Cell width={48} flex="none">
+                <Popover
+                    content={renderRowMenu(handleDelete)}
+                    position={Position.BOTTOM_RIGHT}
+                >
+                    <IconButton icon={MoreIcon} height={24} appearance="minimal" />
+                </Popover>
+            </Table.Cell>
+        </Table.Row>
+
       </>
   );
 };
@@ -125,54 +130,3 @@ Body.propTypes = {
 };
 
 export default Body;
-
-// {f.errors.name ? f.errors.name : null}
-// disabled={f.errors.name}
-
-/* <li className="list-group-item">
-              <div className="form-check form-check-inline">
-                  <input
-                      className="form-check-input position-static"
-                      type="radio"
-                      name="taskRadio"
-                      id={`taskRadio${id}`}
-                      value="option1"
-                  />
-                  <label
-                      className="form-check-label"
-                      htmlFor={`taskRadio${id}`}
-                  >
-                      {name}
-                  </label>
-                  <div className="dropright">
-                      <a
-                          className="nav-link dropdown-toggle"
-                          data-toggle="dropdown"
-                          href="#"
-                          role="button"
-                          aria-haspopup="true"
-                          aria-expanded="false"
-                      ></a>
-                      <div className="dropdown-menu">
-                          <button
-                              className="btn btn-link dropdown-item"
-                              href="#"
-                              onClick={handleOpenCloseForm}
-                          >
-                              Edit task
-                          </button>
-                          <div
-                              role="separator"
-                              className="dropdown-divider"
-                          ></div>
-                          <a
-                              className="dropdown-item"
-                              href="#three"
-                              onClick={handleOpenDelete}
-                          >
-                              Delete task
-                          </a>
-                      </div>
-                  </div>
-              </div>
-          </li> */

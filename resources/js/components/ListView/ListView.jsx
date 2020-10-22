@@ -2,7 +2,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-
+import { Table } from 'evergreen-ui';
 import Header from './Header.jsx';
 import Body from './Body.jsx';
 import Footer from './Footer.jsx';
@@ -41,20 +41,23 @@ const ListView = ({
               </div>
 
               <div className="card-body">
-                  <ul className="list-group list-group-flush">
-                      {tasks.length !== 0
-                        ? tasks.map((task) => (
-                                <Body
-                                    key={task.id}
-                                    task={task}
-                                    listId={listId}
-                                    dispatch={dispatch}
-                                    authToken={authToken}
-                                    showDeleteModal={showDeleteModal}
-                                />
-                        ))
-                        : null}
-                  </ul>
+                    {tasks.length !== 0
+                      ? <Table>
+                        <Table.Body height={200}>
+                          {tasks.map((task) => (
+                          <Body
+                            key={task.id}
+                            task={task}
+                            listId={listId}
+                            dispatch={dispatch}
+                            authToken={authToken}
+                            showDeleteModal={showDeleteModal}
+                          />
+                          ))}
+                        </Table.Body>
+                      </Table>
+                      : null
+                    }
               </div>
               <div className="card-footer">
                   <Footer
