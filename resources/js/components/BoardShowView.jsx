@@ -79,7 +79,7 @@ const BoardShowView = () => {
 
   return (
       <Container>
-          <Container>
+          <Container style={{ marginBottom: 20 }}>
               <Navbar bg="primary" variant="dark">
                   <Nav className="mr-auto">
                       <h3>{board.name}</h3>
